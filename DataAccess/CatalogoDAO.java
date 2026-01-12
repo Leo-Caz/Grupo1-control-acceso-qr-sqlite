@@ -1,0 +1,172 @@
+package DataAccess;
+
+import java.sql.Connection;
+import java.sql.PreparedStatement;
+import java.sql.ResultSet;
+import java.sql.SQLException;
+import java.sql.Statement;
+import java.time.LocalDateTime;
+import java.time.format.DateTimeFormatter;
+import java.util.ArrayList;
+import java.util.List;
+
+import DataAccess.DTO.CatalogoDTO;
+import DataAccess.Helpers.DataHelperSQLite;
+import Framework.PatException;
+
+public class CatalogoDAO extends DataHelperSQLite implements IDAO<CatalogoDTO> {
+
+    @Override
+    public boolean create(CatalogoDTO entity) throws Exception {
+        String query = "INSERT INTO Catalogo (IdCatalogoTipo, Nombre, Descripcion) VALUES (?, ?, ?)";
+        try {
+            Connection conn = openConnection();
+            PreparedStatement pstmt = conn.prepareStatement(query);
+            pstmt.setInt(1, entity.getIdCatalogoTipo()); // Ya no es fijo, viene del objeto
+            pstmt.setString(2, entity.getNombre());
+            pstmt.setString(3, entity.getDescripcion());
+            pstmt.executeUpdate();
+            return true;
+        } catch (SQLException e) {
+            throw new PatException(e.getMessage(), getClass().getName(), "create()");
+        }
+    }
+
+    @Override
+    public List<CatalogoDTO> readAll() throws Exception {
+        List<CatalogoDTO> lst = new ArrayList<>();
+        String query = " SELECT IdCatalogo, IdCatalogoTipo, Nombre, Descripcion, Estado, FechaCreacion, FechaModificacion "
+                     + " FROM Catalogo "
+                     + " WHERE Estado = 'A' ";
+        try {
+            Connection conn = openConnection();
+            Statement stmt = conn.createStatement();
+            ResultSet rs = stmt.executeQuery(query);
+            while (rs.next()) {
+                lst.add(new CatalogoDTO(
+                    rs.getInt("IdCatalogo"),
+                    rs.getInt("IdCatalogoTipo"),
+                    rs.getString("Nombre"),
+                    rs.getString("Descripcion"),
+                    rs.getString("Estado"),
+                    rs.getString("FechaCreacion"),
+                    rs.getString("FechaModificacion")
+                ));
+            }
+        } catch (SQLException e) {
+            throw new PatException(e.getMessage(), getClass().getName(), "readAll()");
+        }
+        return lst;
+    }
+
+    /**
+     * MÉTODO CRÍTICO PARA LA INTERFAZ GRÁFICA.
+     * Permite obtener listas filtradas (Solo Sexos, Solo Roles, etc.)
+     * @param idCatalogoTipo El ID del tipo de lista que quieres (ej: 1=Roles, 2=Sexo)
+     */
+    public List<CatalogoDTO> readByType(int idCatalogoTipo) throws Exception {
+        List<CatalogoDTO> lst = new ArrayList<>();
+        String query = " SELECT IdCatalogo, IdCatalogoTipo, Nombre, Descripcion, Estado, FechaCreacion, FechaModificacion "
+                     + " FROM Catalogo "
+                     + " WHERE Estado = 'A' AND IdCatalogoTipo = ? ";
+        try {
+            Connection conn = openConnection();
+            PreparedStatement pstmt = conn.prepareStatement(query);
+            pstmt.setInt(1, idCatalogoTipo);
+            ResultSet rs = pstmt.executeQuery();
+            while (rs.next()) {
+                lst.add(new CatalogoDTO(
+                    rs.getInt("IdCatalogo"),
+                    rs.getInt("IdCatalogoTipo"),
+                    rs.getString("Nombre"),
+                    rs.getString("Descripcion"),
+                    rs.getString("Estado"),
+                    rs.getString("FechaCreacion"),
+                    rs.getString("FechaModificacion")
+                ));
+            }
+        } catch (SQLException e) {
+            throw new PatException(e.getMessage(), getClass().getName(), "readByType()");
+        }
+        return lst;
+    }
+
+    @Override
+    public boolean update(CatalogoDTO entity) throws Exception {
+        DateTimeFormatter dtf = DateTimeFormatter.ofPattern("yyyy-MM-dd HH:mm:ss");
+        LocalDateTime now = LocalDateTime.now();
+        String query = " UPDATE Catalogo SET IdCatalogoTipo = ?, Nombre = ?, Descripcion = ?, FechaModificacion = ? "
+                     + " WHERE IdCatalogo = ?";
+        try {
+            Connection conn = openConnection();
+            PreparedStatement pstmt = conn.prepareStatement(query);
+            pstmt.setInt(1, entity.getIdCatalogoTipo());
+            pstmt.setString(2, entity.getNombre());
+            pstmt.setString(3, entity.getDescripcion());
+            pstmt.setString(4, dtf.format(now));
+            pstmt.setInt(5, entity.getIdCatalogo());
+            pstmt.executeUpdate();
+            return true;
+        } catch (SQLException e) {
+            throw new PatException(e.getMessage(), getClass().getName(), "update()");
+        }
+    }
+
+    @Override
+    public boolean delete(int id) throws Exception {
+        String query = " UPDATE Catalogo SET Estado = ? WHERE IdCatalogo = ? ";
+        try {
+            Connection conn = openConnection();
+            PreparedStatement pstmt = conn.prepareStatement(query);
+            pstmt.setString(1, "X"); // Borrado lógico
+            pstmt.setInt(2, id);
+            pstmt.executeUpdate();
+            return true;
+        } catch (SQLException e) {
+            throw new PatException(e.getMessage(), getClass().getName(), "delete()");
+        }
+    }
+
+    @Override
+    public CatalogoDTO readById(Integer id) throws Exception {
+        CatalogoDTO s = new CatalogoDTO();
+        String query = " SELECT IdCatalogo, IdCatalogoTipo, Nombre, Descripcion, Estado, FechaCreacion, FechaModificacion "
+                     + " FROM Catalogo "
+                     + " WHERE Estado = 'A' AND IdCatalogo = ? ";
+        try {
+            Connection conn = openConnection();
+            PreparedStatement pstmt = conn.prepareStatement(query);
+            pstmt.setInt(1, id);
+            ResultSet rs = pstmt.executeQuery();
+            if (rs.next()) {
+                s = new CatalogoDTO(
+                    rs.getInt("IdCatalogo"),
+                    rs.getInt("IdCatalogoTipo"),
+                    rs.getString("Nombre"),
+                    rs.getString("Descripcion"),
+                    rs.getString("Estado"),
+                    rs.getString("FechaCreacion"),
+                    rs.getString("FechaModificacion")
+                );
+            }
+        } catch (SQLException e) {
+            throw new PatException(e.getMessage(), getClass().getName(), "readById()");
+        }
+        return s;
+    }
+    
+    public Integer getRowCount() throws Exception {
+        String query = " SELECT COUNT(*) FROM Catalogo WHERE Estado = 'A' ";
+        try {
+            Connection conn = openConnection();
+            Statement stmt = conn.createStatement();
+            ResultSet rs = stmt.executeQuery(query);
+            if (rs.next()) {
+                return rs.getInt(1);
+            }
+        } catch (SQLException e) {
+            throw new PatException(e.getMessage(), getClass().getName(), "getRowCount()");
+        }
+        return 0;
+    }
+}
