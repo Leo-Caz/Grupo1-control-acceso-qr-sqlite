@@ -1,0 +1,196 @@
+package DataAccess;
+
+import java.sql.Connection;
+import java.sql.PreparedStatement;
+import java.sql.ResultSet;
+import java.sql.SQLException;
+import java.sql.Statement;
+import java.time.LocalDateTime;
+import java.time.format.DateTimeFormatter;
+import java.util.ArrayList;
+import java.util.List;
+
+import DataAccess.DTO.CarnetDTO;
+import DataAccess.Helpers.DataHelperSQLite;
+import Framework.PatException;
+
+public class CarnetDAO extends DataHelperSQLite implements IDAO<CarnetDTO> {
+
+    @Override
+    public boolean create(CarnetDTO entity) throws Exception {
+        String query = "INSERT INTO Carnet (IdUsuario, CodigoQR) VALUES (?, ?)";
+        try {
+            Connection conn = openConnection();
+            PreparedStatement pstmt = conn.prepareStatement(query);
+
+            pstmt.setInt(1, entity.getIdUsuario());
+            pstmt.setString(2, entity.getCodigoQR());
+
+            pstmt.executeUpdate();
+            return true;
+        } catch (SQLException e) {
+            throw new PatException(e.getMessage(), getClass().getName(), "create()");
+        }
+    }
+
+    @Override
+    public List<CarnetDTO> readAll() throws Exception {
+        List<CarnetDTO> lst = new ArrayList<>();
+
+        String query = "SELECT IdCarnet, IdUsuario, CodigoQR, Estado, FechaCreacion, FechaModificacion " +
+                       "FROM Carnet WHERE Estado = 'A'";
+
+        try {
+            Connection conn = openConnection();
+            Statement stmt = conn.createStatement();
+            ResultSet rs = stmt.executeQuery(query);
+
+            while (rs.next()) {
+                CarnetDTO c = new CarnetDTO(
+                    rs.getInt("IdCarnet"),
+                    rs.getInt("IdUsuario"),
+                    rs.getString("CodigoQR"),
+                    rs.getString("Estado"),
+                    rs.getString("FechaCreacion"),
+                    rs.getString("FechaModificacion")
+                );
+                lst.add(c);
+            }
+        } catch (SQLException e) {
+            throw new PatException(e.getMessage(), getClass().getName(), "readAll()");
+        }
+
+        return lst;
+    }
+
+    @Override
+    public CarnetDTO readById(Integer id) throws Exception {
+        CarnetDTO c = null;
+
+        String query = "SELECT IdCarnet, IdUsuario, CodigoQR, Estado, FechaCreacion, FechaModificacion " +
+                       "FROM Carnet WHERE Estado = 'A' AND IdCarnet = ?";
+
+        try {
+            Connection conn = openConnection();
+            PreparedStatement pstmt = conn.prepareStatement(query);
+            pstmt.setInt(1, id);
+            ResultSet rs = pstmt.executeQuery();
+
+            if (rs.next()) {
+                c = new CarnetDTO(
+                    rs.getInt("IdCarnet"),
+                    rs.getInt("IdUsuario"),
+                    rs.getString("CodigoQR"),
+                    rs.getString("Estado"),
+                    rs.getString("FechaCreacion"),
+                    rs.getString("FechaModificacion")
+                );
+            }
+        } catch (SQLException e) {
+            throw new PatException(e.getMessage(), getClass().getName(), "readById()");
+        }
+
+        return c;
+    }
+
+    @Override
+    public boolean update(CarnetDTO entity) throws Exception {
+        DateTimeFormatter dtf = DateTimeFormatter.ofPattern("yyyy-MM-dd HH:mm:ss");
+        LocalDateTime now = LocalDateTime.now();
+
+        String query = "UPDATE Carnet SET IdUsuario = ?, CodigoQR = ?, FechaModificacion = ? " +
+                       "WHERE IdCarnet = ?";
+
+        try {
+            Connection conn = openConnection();
+            PreparedStatement pstmt = conn.prepareStatement(query);
+
+            pstmt.setInt(1, entity.getIdUsuario());
+            pstmt.setString(2, entity.getCodigoQR());
+            pstmt.setString(3, dtf.format(now));
+            pstmt.setInt(4, entity.getIdCarnet());
+
+            pstmt.executeUpdate();
+            return true;
+        } catch (SQLException e) {
+            throw new PatException(e.getMessage(), getClass().getName(), "update()");
+        }
+    }
+
+    @Override
+    public boolean delete(int id) throws Exception {
+        String query = "UPDATE Carnet SET Estado = ? WHERE IdCarnet = ?";
+        try {
+            Connection conn = openConnection();
+            PreparedStatement pstmt = conn.prepareStatement(query);
+            pstmt.setString(1, "X");
+            pstmt.setInt(2, id);
+            pstmt.executeUpdate();
+            return true;
+        } catch (SQLException e) {
+            throw new PatException(e.getMessage(), getClass().getName(), "delete()");
+        }
+    }
+
+    /**
+     * Método clave del proyecto: QR -> Carnet activo
+     */
+    public CarnetDTO readByCodigoQR(String codigoQR) throws Exception {
+        CarnetDTO c = null;
+
+        String query = "SELECT IdCarnet, IdUsuario, CodigoQR, Estado, FechaCreacion, FechaModificacion " +
+                       "FROM Carnet WHERE Estado = 'A' AND CodigoQR = ?";
+
+        try {
+            Connection conn = openConnection();
+            PreparedStatement pstmt = conn.prepareStatement(query);
+            pstmt.setString(1, codigoQR);
+            ResultSet rs = pstmt.executeQuery();
+
+            if (rs.next()) {
+                c = new CarnetDTO(
+                    rs.getInt("IdCarnet"),
+                    rs.getInt("IdUsuario"),
+                    rs.getString("CodigoQR"),
+                    rs.getString("Estado"),
+                    rs.getString("FechaCreacion"),
+                    rs.getString("FechaModificacion")
+                );
+            }
+        } catch (SQLException e) {
+            throw new PatException(e.getMessage(), getClass().getName(), "readByCodigoQR()");
+        }
+
+        return c;
+    }
+
+    public CarnetDTO readByUsuarioId(Integer idUsuario) throws Exception {
+        CarnetDTO c = null;
+
+        String query = "SELECT IdCarnet, IdUsuario, CodigoQR, Estado, FechaCreacion, FechaModificacion " +
+                       "FROM Carnet WHERE Estado = 'A' AND IdUsuario = ?";
+
+        try {
+            Connection conn = openConnection();
+            PreparedStatement pstmt = conn.prepareStatement(query);
+            pstmt.setInt(1, idUsuario);
+            ResultSet rs = pstmt.executeQuery();
+
+            if (rs.next()) {
+                c = new CarnetDTO(
+                    rs.getInt("IdCarnet"),
+                    rs.getInt("IdUsuario"),
+                    rs.getString("CodigoQR"),
+                    rs.getString("Estado"),
+                    rs.getString("FechaCreacion"),
+                    rs.getString("FechaModificacion")
+                );
+            }
+        } catch (SQLException e) {
+            throw new PatException(e.getMessage(), getClass().getName(), "readByUsuarioId()");
+        }
+
+        return c;
+    }
+}
+

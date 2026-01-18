@@ -23,6 +23,7 @@ public abstract class DataHelperSQLite {
         try {
             if(conn == null)
                 conn = DriverManager.getConnection(DBPathConnection);
+                conn.createStatement().execute("PRAGMA foreign_keys = ON;");
         } catch (SQLException e) {
             throw e; //new Exception(e,"SQLiteDataHelper","Fallo la coneccion a la base de datos");
         } 

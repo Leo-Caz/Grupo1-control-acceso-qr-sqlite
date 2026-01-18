@@ -30,16 +30,13 @@ INSERT INTO Catalogo
 (   4                   ,'Indigena'     ,'tipos de raza');
 
 -- para probar estos datos
-INSERT INTO Usuario 
-(IdCatalogoTipoUsuario, IdCatalogoSexo, IdCatalogoEstadoCivil, Cedula, PrimerNombre, SegundoNombre, PrimerApellido, SegundoApellido, Foto) VALUES
-(1, 7, 11, '1234567890', 'Juan',    'Carlos',   'Perez',      'Lopez',      'fotos/juan.jpg'),
-(2, 8, 13, '9876543210', 'Maria',   'Elena',    'Gonzalez',   'Vera',       'fotos/maria.jpg'),
-(3, 7, 12, '5555555555', 'Carlos',  'Andres',   'Rodriguez',  'Mora',       'fotos/carlos.jpg'),
-(4, 8, 11, '1111111111', 'Ana',     'Lucia',    'Martinez',  'Paz',        'fotos/ana.jpg'),
-(1, 7, 12, '1234576899', 'Jose',    'Miguel',   'Pelaez',    'Rios',       'fotos/jose.jpg'),
-(2, 8, 11, '1233565677', 'Martina', 'Isabel',   'Guerra',    'Salazar',    'fotos/martina.jpg'),
-(3, 7, 14, '2892937422', 'Pedro',   'Alfonso',  'Garcia',    'Ortega',     'fotos/pedro.jpg'),
-(4, 8, 13, '9305380588', 'Karla',   'Beatriz',  'Bustos',    'Reyes',      'fotos/karla.jpg');
+INSERT INTO Usuario
+(IdCatalogoTipoUsuario, IdCatalogoSexo, IdCatalogoEstadoCivil, IdCatalogoRaza,
+ Cedula, PrimerNombre, SegundoNombre, PrimerApellido, SegundoApellido, Foto)
+VALUES
+(1, 7, 11, 17, '1234567890', 'Juan', 'Carlos', 'Perez', 'Lopez', 'fotos/juan.jpg'),
+(2, 8, 13, 16, '9876543210', 'Maria','Elena',  'Gonzalez','Vera','fotos/maria.jpg');
+
 
 
 -- Para probar estos datos

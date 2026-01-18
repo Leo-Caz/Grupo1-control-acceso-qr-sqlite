@@ -5,7 +5,9 @@ DROP TABLE IF EXISTS Registro;
 DROP TABLE IF EXISTS Carnet;
 DROP TABLE IF EXISTS Persona;
 DROP TABLE IF EXISTS Usuario;
+DROP TABLE IF EXISTS Catalogo;
 DROP TABLE IF EXISTS CatalogoTipo;
+
 
 CREATE TABLE CatalogoTipo(
     IdCatalogoTipo  INTEGER PRIMARY KEY AUTOINCREMENT,
@@ -33,13 +35,13 @@ CREATE TABLE Usuario (
     IdCatalogoTipoUsuario   INTEGER NOT NULL REFERENCES Catalogo(IdCatalogo),
     IdCatalogoSexo          INTEGER NOT NULL REFERENCES Catalogo(IdCatalogo),
     IdCatalogoEstadoCivil   INTEGER NOT NULL REFERENCES Catalogo(IdCatalogo),
+    IdCatalogoRaza          INTEGER NOT NULL REFERENCES Catalogo(IdCatalogo),
     
     PrimerNombre            VARCHAR(15) NOT NULL,
     SegundoNombre           VARCHAR(15),
     PrimerApellido          VARCHAR(12) NOT NULL,
     SegundoApellido         VARCHAR(12) NOT NULL,
     Cedula                  VARCHAR(10) NOT NULL UNIQUE,
-    IdCatalogoTipo          INTEGER NOT NULL REFERENCES CatalogoTipo(IdCatalogoTipo),
     Foto                    TEXT NOT NULL DEFAULT 'sin_foto.jpg',
 
     Estado VARCHAR(1) NOT NULL DEFAULT ('A'),
@@ -49,12 +51,12 @@ CREATE TABLE Usuario (
 
 
 CREATE TABLE Carnet (
-    IdCarnet    INTEGER PRIMARY KEY AUTOINCREMENT,
-    IdUsuario   INTEGER REFERENCES Usuario(IdUsuario),
-    CodigoQR    VARCHAR(75) NOT NULL UNIQUE,
+    IdCarnet          INTEGER PRIMARY KEY AUTOINCREMENT,
+    IdUsuario         INTEGER NOT NULL REFERENCES Usuario(IdUsuario),
+    CodigoQR          VARCHAR(75) NOT NULL UNIQUE,
 
-    Estado VARCHAR(1) NOT NULL DEFAULT ('A'),
-    FechaCreacion DATETIME DEFAULT(datetime('now','localtime')),
+    Estado            VARCHAR(1) NOT NULL DEFAULT ('A'),
+    FechaCreacion     DATETIME DEFAULT(datetime('now','localtime')),
     FechaModificacion DATETIME
 );
 
@@ -66,3 +68,6 @@ CREATE TABLE Registro (
 
     Estado VARCHAR(1) NOT NULL DEFAULT ('A')
 );
+
+CREATE UNIQUE INDEX IF NOT EXISTS ux_carnet_usuario
+ON Carnet(IdUsuario);
