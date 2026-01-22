@@ -84,13 +84,10 @@ public class SwingMainWindow extends JFrame implements UIContract {
 
         panelInfo.add(crearLabel("Nombre:", labelFont));
         panelInfo.add(crearLabel("----", valueFont));
-
         panelInfo.add(crearLabel("Rol:", labelFont));
         panelInfo.add(crearLabel("----", valueFont));
-
         panelInfo.add(crearLabel("Estado:", labelFont));
         panelInfo.add(crearLabel("----", valueFont));
-
         panelInfo.add(crearLabel("Cédula:", labelFont));
         panelInfo.add(crearLabel("----", valueFont));
 
