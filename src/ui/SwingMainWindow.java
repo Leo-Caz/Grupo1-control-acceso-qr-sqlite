@@ -1,8 +1,7 @@
 package ui;
-
 import javax.swing.*;
 import java.awt.*;
-
+//Ventana principal
 public class SwingMainWindow extends JFrame implements UIContract {
 
     private JLabel lblEstado;
