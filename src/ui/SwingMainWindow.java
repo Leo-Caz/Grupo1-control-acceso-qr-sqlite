@@ -22,24 +22,20 @@ public class SwingMainWindow extends JFrame implements UIContract {
 
     private void inicializarComponentes() {
 
-        // 🎨 PALETA DE COLORES
         Color colorFondo = new Color(245, 247, 250);
         Color colorPanel = Color.WHITE;
         Color colorTitulo = new Color(33, 37, 41);
         Color colorAcento = new Color(0, 102, 204);
 
-        // ===== PANEL SUPERIOR =====
         JTabbedPane tabs = new JTabbedPane();
         tabs.addTab("Control de Acceso", new JPanel());
         tabs.addTab("Gestión de Usuarios", new JPanel());
         tabs.addTab("Historial de Registros", new JPanel());
         add(tabs, BorderLayout.NORTH);
 
-        // ===== PANEL CENTRAL =====
         JPanel panelCentral = new JPanel(new BorderLayout());
         panelCentral.setBackground(colorFondo);
 
-        // ===== PANEL CÁMARA =====
         JPanel panelCamara = new JPanel(new BorderLayout());
         panelCamara.setPreferredSize(new Dimension(480, 0));
         panelCamara.setBackground(Color.BLACK);
@@ -55,7 +51,6 @@ public class SwingMainWindow extends JFrame implements UIContract {
         lblCamara.setFont(new Font("Segoe UI", Font.PLAIN, 14));
         panelCamara.add(lblCamara, BorderLayout.CENTER);
 
-        // ===== PANEL DATOS =====
         JPanel panelDatos = new JPanel();
         panelDatos.setLayout(new BoxLayout(panelDatos, BoxLayout.Y_AXIS));
         panelDatos.setBackground(colorPanel);
@@ -81,7 +76,6 @@ public class SwingMainWindow extends JFrame implements UIContract {
         lblFoto.setFont(new Font("Segoe UI", Font.PLAIN, 12));
         lblFoto.setAlignmentX(Component.CENTER_ALIGNMENT);
 
-        // ===== INFO USUARIO =====
         JPanel panelInfo = new JPanel(new GridLayout(4, 2, 10, 10));
         panelInfo.setOpaque(false);
 
@@ -100,7 +94,6 @@ public class SwingMainWindow extends JFrame implements UIContract {
         panelInfo.add(crearLabel("Cédula:", labelFont));
         panelInfo.add(crearLabel("----", valueFont));
 
-        // ===== ESTADO GENERAL =====
         lblEstado = new JLabel("ESPERANDO LECTURA", SwingConstants.CENTER);
         lblEstado.setOpaque(true);
         lblEstado.setBackground(new Color(220, 220, 220));
@@ -119,7 +112,6 @@ public class SwingMainWindow extends JFrame implements UIContract {
 
         add(panelCentral, BorderLayout.CENTER);
 
-        // ===== PANEL INFERIOR =====
         JPanel panelBotones = new JPanel(new FlowLayout(FlowLayout.RIGHT));
         panelBotones.setBackground(colorPanel);
 
