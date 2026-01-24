@@ -1,5 +1,6 @@
 package BussinessLogic.Entities;
 
+import java.util.ArrayList;
 import java.util.List;
 import DataAccess.CatalogoDAO; 
 import DataAccess.DTO.CatalogoDTO; 
@@ -36,4 +37,7 @@ public class CatalogoBL {
     public boolean delete(int idReg) throws Exception {
         return catDAO.delete(idReg);
     }
+    public List<CatalogoDTO> readByType(int idCatalogoTipo) throws Exception {
+    List<CatalogoDTO> lst = new ArrayList<>();
+    String
 }
