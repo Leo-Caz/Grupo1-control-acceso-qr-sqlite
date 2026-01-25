@@ -1,39 +1,40 @@
-import java.awt.image.BufferedImage;
-import java.util.Optional;
-import java.util.Scanner;
+import javax.swing.SwingUtilities;
+import javax.swing.UIManager;
 
-import camera.CameraService;
-import camera.CameraServiceImpl;
-import qr.ZXingDecoder;
+import controller.AccessController;
+import ui.SwingMainWindow;
 
 public class AppBootstrap {
     public static void main(String[] args) {
-        System.out.println("🎥 Prueba Cámara + ZXing");
-        CameraService camera = new CameraServiceImpl();
-        camera.start();
-        
-        Scanner scanner = new Scanner(System.in);
-        System.out.println("✅ ENTER para QR, 'q' para salir:");
-        
-        while (true) {
-            String input = scanner.nextLine().trim();
-            if (input.equalsIgnoreCase("q")) break;
-            
-            BufferedImage frame = camera.getFrame();
-            if (frame == null) {
-                System.out.println("❌ Sin frame");
-                continue;
-            }
-            //si quieren cambiar los emojis con windows + . les sale para cambiar
-            Optional<String> qr = ZXingDecoder.decode(frame);
-            if (qr.isPresent()) {
-                System.out.println("✅ QR: " + qr.get());
-            } else {
-                System.out.println("❌ Sin QR");
-            }
+        // Estética nativa del sistema operativo
+        try {
+            UIManager.setLookAndFeel(UIManager.getSystemLookAndFeelClassName());
+        } catch (Exception e) {
+            System.out.println("⚠️ No se pudo cargar el estilo nativo.");
         }
-        
-        camera.stop();
-        scanner.close();
+
+        // Iniciar la aplicación gráfica
+        SwingUtilities.invokeLater(() -> {
+            try {
+                System.out.println("🚀 Iniciando Sistema de Control de Acceso...");
+                
+                // 1. Crear la Vista (Ventana)
+                SwingMainWindow window = new SwingMainWindow();
+                
+                // 2. Crear el Controlador (Cerebro) e inyectar la Vista
+                AccessController controller = new AccessController(window);
+                
+                // 3. Conectar la Vista con el Controlador
+                window.setController(controller);
+                
+                // 4. Mostrar ventana y arrancar la cámara
+                window.setVisible(true);
+                controller.start();
+                
+            } catch (Exception e) {
+                e.printStackTrace();
+                System.err.println("❌ Error fatal al iniciar la aplicación.");
+            }
+        });
     }
 }
