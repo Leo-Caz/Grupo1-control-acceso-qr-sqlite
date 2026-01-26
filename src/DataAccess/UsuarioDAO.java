@@ -104,55 +104,55 @@ public class UsuarioDAO extends DataHelperSQLite implements IDAO<UsuarioDTO> {
 
     @Override
     public UsuarioDTO readById(Integer id) throws Exception {
-       UsuarioDTO u = null;
-    String query = " SELECT "
-            + " u.IdUsuario, u.IdCatalogoTipoUsuario, u.IdCatalogoSexo, u.IdCatalogoEstadoCivil, u.IdCatalogoRaza, "
-            + " u.PrimerNombre, u.SegundoNombre, u.PrimerApellido, u.SegundoApellido, "
-            + " u.Cedula, u.Foto, u.Estado, u.FechaCreacion, u.FechaModificacion, "
-            + " cRol.Nombre AS RolNombre, "
-            + " cSexo.Nombre AS SexoNombre, "
-            + " cCivil.Nombre AS CivilNombre, "
-            + " cRaza.Nombre AS RazaNombre "
-            + " FROM Usuario u "
-            + " JOIN Catalogo cRol  ON u.IdCatalogoTipoUsuario = cRol.IdCatalogo "
-            + " JOIN Catalogo cSexo ON u.IdCatalogoSexo = cSexo.IdCatalogo "
-            + " JOIN Catalogo cCivil ON u.IdCatalogoEstadoCivil = cCivil.IdCatalogo "
-            + " JOIN Catalogo cRaza ON u.IdCatalogoRaza = cRaza.IdCatalogo " 
-            + " WHERE u.Estado = 'A' AND u.IdUsuario = ? ";
+        UsuarioDTO u = null;
+        String query = " SELECT "
+                + " u.IdUsuario, u.IdCatalogoTipoUsuario, u.IdCatalogoSexo, u.IdCatalogoEstadoCivil, u.IdCatalogoRaza, "
+                + " u.PrimerNombre, u.SegundoNombre, u.PrimerApellido, u.SegundoApellido, "
+                + " u.Cedula, u.Foto, u.Estado, u.FechaCreacion, u.FechaModificacion, "
+                + " cRol.Nombre AS RolNombre, "
+                + " cSexo.Nombre AS SexoNombre, "
+                + " cCivil.Nombre AS CivilNombre, "
+                + " cRaza.Nombre AS RazaNombre "
+                + " FROM Usuario u "
+                + " JOIN Catalogo cRol  ON u.IdCatalogoTipoUsuario = cRol.IdCatalogo "
+                + " JOIN Catalogo cSexo ON u.IdCatalogoSexo = cSexo.IdCatalogo "
+                + " JOIN Catalogo cCivil ON u.IdCatalogoEstadoCivil = cCivil.IdCatalogo "
+                + " JOIN Catalogo cRaza ON u.IdCatalogoRaza = cRaza.IdCatalogo "
+                + " WHERE u.Estado = 'A' AND u.IdUsuario = ? ";
 
-    try {
-        Connection conn = openConnection();
-        PreparedStatement pstmt = conn.prepareStatement(query);
-        pstmt.setInt(1, id);
-        ResultSet rs = pstmt.executeQuery();
+        try {
+            Connection conn = openConnection();
+            PreparedStatement pstmt = conn.prepareStatement(query);
+            pstmt.setInt(1, id);
+            ResultSet rs = pstmt.executeQuery();
 
-        if (rs.next()) {
-            u = new UsuarioDTO(
-                    rs.getInt("IdUsuario"),
-                    rs.getInt("IdCatalogoTipoUsuario"),
-                    rs.getInt("IdCatalogoSexo"),
-                    rs.getInt("IdCatalogoEstadoCivil"),
-                    rs.getString("PrimerNombre"),
-                    rs.getString("SegundoNombre"),
-                    rs.getString("PrimerApellido"),
-                    rs.getString("SegundoApellido"),
-                    rs.getString("Cedula"),
-                    rs.getInt("IdCatalogoRaza"),
-                    rs.getString("Foto"),
-                    rs.getString("Estado"),
-                    rs.getString("FechaCreacion"),
-                    rs.getString("FechaModificacion"),
-                    rs.getString("RolNombre"),
-                    rs.getString("SexoNombre"),
-                    rs.getString("CivilNombre"),
-                    rs.getString("RazaNombre") 
-            );
+            if (rs.next()) {
+                u = new UsuarioDTO(
+                        rs.getInt("IdUsuario"),
+                        rs.getInt("IdCatalogoTipoUsuario"),
+                        rs.getInt("IdCatalogoSexo"),
+                        rs.getInt("IdCatalogoEstadoCivil"),
+                        rs.getString("PrimerNombre"),
+                        rs.getString("SegundoNombre"),
+                        rs.getString("PrimerApellido"),
+                        rs.getString("SegundoApellido"),
+                        rs.getString("Cedula"),
+                        rs.getInt("IdCatalogoRaza"),
+                        rs.getString("Foto"),
+                        rs.getString("Estado"),
+                        rs.getString("FechaCreacion"),
+                        rs.getString("FechaModificacion"),
+                        rs.getString("RolNombre"),
+                        rs.getString("SexoNombre"),
+                        rs.getString("CivilNombre"),
+                        rs.getString("RazaNombre")
+                );
+            }
+        } catch (SQLException e) {
+            throw new PatException(e.getMessage(), getClass().getName(), "readById()");
         }
-    } catch (SQLException e) {
-        throw new PatException(e.getMessage(), getClass().getName(), "readById()");
+        return u;
     }
-    return u;
-}
 
     @Override
     public boolean update(UsuarioDTO entity) throws Exception {
@@ -205,53 +205,52 @@ public class UsuarioDAO extends DataHelperSQLite implements IDAO<UsuarioDTO> {
         }
     }
 
-    @Override
-public UsuarioDTO readByCedula(String cedula) throws Exception {
-    UsuarioDTO u = null;
-    // Agregamos los JOINs para que la UI reciba los nombres (Rol, Sexo, etc.)
-    String query = " SELECT "
-            + " u.IdUsuario, u.IdCatalogoTipoUsuario, u.IdCatalogoSexo, u.IdCatalogoEstadoCivil, u.IdCatalogoRaza, "
-            + " u.PrimerNombre, u.SegundoNombre, u.PrimerApellido, u.SegundoApellido, "
-            + " u.Cedula, u.Foto, u.Estado, u.FechaCreacion, u.FechaModificacion, "
-            + " cRol.Nombre AS RolNombre, cSexo.Nombre AS SexoNombre, "
-            + " cCivil.Nombre AS CivilNombre, cRaza.Nombre AS RazaNombre "
-            + " FROM Usuario u "
-            + " JOIN Catalogo cRol  ON u.IdCatalogoTipoUsuario = cRol.IdCatalogo "
-            + " JOIN Catalogo cSexo ON u.IdCatalogoSexo = cSexo.IdCatalogo "
-            + " JOIN Catalogo cCivil ON u.IdCatalogoEstadoCivil = cCivil.IdCatalogo "
-            + " JOIN Catalogo cRaza ON u.IdCatalogoRaza = cRaza.IdCatalogo "
-            + " WHERE u.Estado = 'A' AND u.Cedula = ? ";
-    try {
-        Connection conn = openConnection();
-        PreparedStatement pstmt = conn.prepareStatement(query);
-        pstmt.setString(1, cedula);
-        ResultSet rs = pstmt.executeQuery();
-        if (rs.next()) {
-            // Usamos el constructor completo para que no falte ningún dato
-            u = new UsuarioDTO(
-                rs.getInt("IdUsuario"),
-                rs.getInt("IdCatalogoTipoUsuario"),
-                rs.getInt("IdCatalogoSexo"),
-                rs.getInt("IdCatalogoEstadoCivil"),
-                rs.getString("PrimerNombre"),
-                rs.getString("SegundoNombre"),
-                rs.getString("PrimerApellido"),
-                rs.getString("SegundoApellido"),
-                rs.getString("Cedula"),
-                rs.getInt("IdCatalogoRaza"),
-                rs.getString("Foto"),
-                rs.getString("Estado"),
-                rs.getString("FechaCreacion"),
-                rs.getString("FechaModificacion"),
-                rs.getString("RolNombre"),
-                rs.getString("SexoNombre"),
-                rs.getString("CivilNombre"),
-                rs.getString("RazaNombre")
-            );
+    public UsuarioDTO readByCedula(String cedula) throws Exception {
+        UsuarioDTO u = null;
+        // Agregamos los JOINs para que la UI reciba los nombres (Rol, Sexo, etc.)
+        String query = " SELECT "
+                + " u.IdUsuario, u.IdCatalogoTipoUsuario, u.IdCatalogoSexo, u.IdCatalogoEstadoCivil, u.IdCatalogoRaza, "
+                + " u.PrimerNombre, u.SegundoNombre, u.PrimerApellido, u.SegundoApellido, "
+                + " u.Cedula, u.Foto, u.Estado, u.FechaCreacion, u.FechaModificacion, "
+                + " cRol.Nombre AS RolNombre, cSexo.Nombre AS SexoNombre, "
+                + " cCivil.Nombre AS CivilNombre, cRaza.Nombre AS RazaNombre "
+                + " FROM Usuario u "
+                + " JOIN Catalogo cRol  ON u.IdCatalogoTipoUsuario = cRol.IdCatalogo "
+                + " JOIN Catalogo cSexo ON u.IdCatalogoSexo = cSexo.IdCatalogo "
+                + " JOIN Catalogo cCivil ON u.IdCatalogoEstadoCivil = cCivil.IdCatalogo "
+                + " JOIN Catalogo cRaza ON u.IdCatalogoRaza = cRaza.IdCatalogo "
+                + " WHERE u.Estado = 'A' AND u.Cedula = ? ";
+        try {
+            Connection conn = openConnection();
+            PreparedStatement pstmt = conn.prepareStatement(query);
+            pstmt.setString(1, cedula);
+            ResultSet rs = pstmt.executeQuery();
+            if (rs.next()) {
+                // Usamos el constructor completo para que no falte ningún dato
+                u = new UsuarioDTO(
+                        rs.getInt("IdUsuario"),
+                        rs.getInt("IdCatalogoTipoUsuario"),
+                        rs.getInt("IdCatalogoSexo"),
+                        rs.getInt("IdCatalogoEstadoCivil"),
+                        rs.getString("PrimerNombre"),
+                        rs.getString("SegundoNombre"),
+                        rs.getString("PrimerApellido"),
+                        rs.getString("SegundoApellido"),
+                        rs.getString("Cedula"),
+                        rs.getInt("IdCatalogoRaza"),
+                        rs.getString("Foto"),
+                        rs.getString("Estado"),
+                        rs.getString("FechaCreacion"),
+                        rs.getString("FechaModificacion"),
+                        rs.getString("RolNombre"),
+                        rs.getString("SexoNombre"),
+                        rs.getString("CivilNombre"),
+                        rs.getString("RazaNombre")
+                );
+            }
+        } catch (SQLException e) {
+            throw new PatException(e.getMessage(), getClass().getName(), "readByCedula()");
         }
-    } catch (SQLException e) {
-        throw new PatException(e.getMessage(), getClass().getName(), "readByCedula()");
+        return u;
     }
-    return u;
-}
 }

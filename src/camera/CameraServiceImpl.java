@@ -1,4 +1,4 @@
-package camera;
+package Camera;
 
 import java.awt.Dimension;
 import java.awt.image.BufferedImage;
@@ -12,8 +12,30 @@ public class CameraServiceImpl implements CameraService {
     @Override
     public void start() {
         webcam = Webcam.getDefault();
-        webcam.setViewSize(new Dimension(640, 480));
-        webcam.open();
+        
+        if (webcam != null) {
+            // Buscamos si la cámara soporta 640x480
+            Dimension[] sizes = webcam.getViewSizes();
+            Dimension targetSize = new Dimension(640, 480);
+            boolean supportsTarget = false;
+
+            for (Dimension d : sizes) {
+                if (d.equals(targetSize)) {
+                    supportsTarget = true;
+                    break;
+                }
+            }
+
+            // Solo forzamos el tamaño si la cámara lo permite
+            if (supportsTarget) {
+                webcam.setViewSize(targetSize);
+            } else {
+                // Opcional: Imprimir advertencia para saber qué tamaño está usando
+                System.out.println("Advertencia: La cámara no soporta 640x480. Se usará el tamaño por defecto.");
+            }
+
+            webcam.open();
+        }
     }
 
     @Override

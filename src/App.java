@@ -1,10 +1,10 @@
 import javax.swing.SwingUtilities;
 import javax.swing.UIManager;
 
-import controller.AccessController;
-import ui.SwingMainWindow;
+import Controller.AccessController;
+import UI.SwingMainWindow;
 
-public class AppBootstrap {
+public class App {
     public static void main(String[] args) {
         // Estética nativa del sistema operativo
         try {

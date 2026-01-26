@@ -1,4 +1,4 @@
-package ui;
+package UI;
 
 import java.awt.BorderLayout;
 import java.awt.Color;
@@ -6,12 +6,11 @@ import java.awt.Component;
 import java.awt.Dimension;
 import java.awt.FlowLayout;
 import java.awt.Font;
+import java.awt.Graphics2D;
 import java.awt.GridLayout;
 import java.awt.Image;
 import java.awt.event.WindowAdapter;
 import java.awt.event.WindowEvent;
-import java.awt.geom.AffineTransform;
-import java.awt.image.AffineTransformOp;
 import java.awt.image.BufferedImage;
 import java.io.File;
 
@@ -27,8 +26,8 @@ import javax.swing.JPanel;
 import javax.swing.JTabbedPane;
 import javax.swing.SwingConstants;
 
+import Controller.AccessController;
 import DataAccess.DTO.UsuarioDTO;
-import controller.AccessController;
 //Ventana principal
 public class SwingMainWindow extends JFrame implements UIContract {
 
@@ -295,12 +294,31 @@ public class SwingMainWindow extends JFrame implements UIContract {
     }
 }
 
-    private BufferedImage mirror(BufferedImage src) {
-        // Invierte la imagen horizontalmente
-        AffineTransform tx = AffineTransform.getScaleInstance(-1, 1);
-        tx.translate(-src.getWidth(), 0);
-        AffineTransformOp op = new AffineTransformOp(tx, AffineTransformOp.TYPE_NEAREST_NEIGHBOR);
-        return op.filter(src, null);
+private BufferedImage mirror(BufferedImage src) {
+        // Obtenemos el tipo de imagen original
+        int type = src.getType();
+        
+        // CORRECCIÓN: Si el tipo es 0 (TYPE_CUSTOM), forzamos a INT_ARGB para evitar el error
+        if (type == 0) {
+            type = BufferedImage.TYPE_INT_ARGB;
+        }
+
+        BufferedImage dest = new BufferedImage(
+            src.getWidth(), 
+            src.getHeight(), 
+            type
+        );
+
+        Graphics2D g2d = dest.createGraphics();
+        
+        // Transformación para efecto espejo
+        g2d.translate(src.getWidth(), 0);
+        g2d.scale(-1, 1);
+        
+        g2d.drawImage(src, 0, 0, null);
+        g2d.dispose();
+        
+        return dest;
     }
 
     private String nvl(String s) {

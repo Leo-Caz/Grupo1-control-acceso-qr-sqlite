@@ -1,4 +1,4 @@
-package BussinessLogic.Entities;
+package BusinessLogic.Entities;
 
 import java.util.List;
 

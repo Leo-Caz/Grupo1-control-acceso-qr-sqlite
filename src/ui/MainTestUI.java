@@ -1,7 +1,7 @@
-package ui;
+package UI;
 
-import javax.swing.UIManager;
 import javax.swing.SwingUtilities;
+import javax.swing.UIManager;
 
 public class MainTestUI {
     public static void main(String[] args) {

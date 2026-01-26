@@ -1,4 +1,4 @@
-package camera;
+package Camera;
 
 import java.awt.image.BufferedImage;
 

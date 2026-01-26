@@ -1,4 +1,4 @@
-package qr;
+package QR;
 
 import java.awt.image.BufferedImage;
 import java.util.Optional;
