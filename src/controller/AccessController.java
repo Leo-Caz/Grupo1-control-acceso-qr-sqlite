@@ -1,4 +1,4 @@
-package controller;
+package Controller;
 
 import java.awt.Toolkit;
 import java.awt.image.BufferedImage;
@@ -11,10 +11,10 @@ import javax.swing.SwingUtilities;
 
 import BusinessLogic.Entities.AsistenciaBL;
 import DataAccess.DTO.UsuarioDTO;
-import ui.UIContract;
-import camera.CameraService;
-import camera.CameraServiceImpl;
-import qr.ZXingDecoder;
+import UI.UIContract;
+import Camera.CameraService;
+import Camera.CameraServiceImpl;
+import QR.ZXingDecoder;
 
 public class AccessController {
 

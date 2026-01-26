@@ -1,4 +1,4 @@
-package ui;
+package UI;
 
 import java.awt.BorderLayout;
 import java.awt.Color;
@@ -26,8 +26,8 @@ import javax.swing.JPanel;
 import javax.swing.JTabbedPane;
 import javax.swing.SwingConstants;
 
+import Controller.AccessController;
 import DataAccess.DTO.UsuarioDTO;
-import controller.AccessController;
 //Ventana principal
 public class SwingMainWindow extends JFrame implements UIContract {
 
