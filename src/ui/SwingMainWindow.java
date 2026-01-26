@@ -1,10 +1,32 @@
 package ui;
+
 import javax.swing.*;
 import java.awt.*;
+import java.awt.event.WindowAdapter;
+import java.awt.event.WindowEvent;
+import java.awt.geom.AffineTransform;
+import java.awt.image.AffineTransformOp;
+import java.awt.image.BufferedImage;
+import java.io.File;
+import javax.imageio.*;
+
+import DataAccess.DTO.UsuarioDTO;
+import controller.AccessController;
 //Ventana principal
 public class SwingMainWindow extends JFrame implements UIContract {
 
+    private static final long serialVersionUID = 1L;
+
     private JLabel lblEstado;
+    private JLabel lblCamara;
+    private JLabel lblFoto;
+
+    private JLabel lblValNombre;
+    private JLabel lblValRol;
+    private JLabel lblValCedula;
+    private JLabel lblValEstadoUsuario;
+
+    private AccessController controller;
 
     public SwingMainWindow() {
         inicializarVentana();
@@ -13,10 +35,17 @@ public class SwingMainWindow extends JFrame implements UIContract {
 
     private void inicializarVentana() {
         setTitle("Sistema de Control de Acceso");
-        setSize(900, 500);
-        setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
+        setSize(950, 550);
+        setDefaultCloseOperation(JFrame.DISPOSE_ON_CLOSE);
         setLocationRelativeTo(null);
         setLayout(new BorderLayout());
+
+        addWindowListener(new WindowAdapter() {
+            @Override
+            public void windowClosed(WindowEvent e) {
+                if (controller != null) controller.stop();
+            }
+        });
     }
 
     private void inicializarComponentes() {
@@ -38,14 +67,11 @@ public class SwingMainWindow extends JFrame implements UIContract {
         JPanel panelCamara = new JPanel(new BorderLayout());
         panelCamara.setPreferredSize(new Dimension(480, 0));
         panelCamara.setBackground(Color.BLACK);
-        panelCamara.setBorder(
-                BorderFactory.createTitledBorder(
-                        BorderFactory.createLineBorder(Color.GRAY),
-                        "Cámara en vivo"
-                )
+        panelCamara.setBorder(BorderFactory.createTitledBorder(
+                BorderFactory.createLineBorder(Color.GRAY), "Cámara en vivo")
         );
 
-        JLabel lblCamara = new JLabel("Vista de cámara", SwingConstants.CENTER);
+        lblCamara = new JLabel("Vista de cámara", SwingConstants.CENTER);
         lblCamara.setForeground(Color.WHITE);
         lblCamara.setFont(new Font("Segoe UI", Font.PLAIN, 14));
         panelCamara.add(lblCamara, BorderLayout.CENTER);
@@ -53,12 +79,10 @@ public class SwingMainWindow extends JFrame implements UIContract {
         JPanel panelDatos = new JPanel();
         panelDatos.setLayout(new BoxLayout(panelDatos, BoxLayout.Y_AXIS));
         panelDatos.setBackground(colorPanel);
-        panelDatos.setBorder(
-                BorderFactory.createCompoundBorder(
-                        BorderFactory.createLineBorder(Color.GRAY),
-                        BorderFactory.createEmptyBorder(15, 20, 15, 20)
-                )
-        );
+        panelDatos.setBorder(BorderFactory.createCompoundBorder(
+                BorderFactory.createLineBorder(Color.GRAY),
+                BorderFactory.createEmptyBorder(15, 20, 15, 20)
+        ));
 
         JLabel titulo = new JLabel("Datos del Usuario Escaneado");
         titulo.setFont(new Font("Segoe UI", Font.BOLD, 18));
@@ -66,7 +90,7 @@ public class SwingMainWindow extends JFrame implements UIContract {
         titulo.setAlignmentX(Component.CENTER_ALIGNMENT);
         titulo.setBorder(BorderFactory.createEmptyBorder(5, 0, 15, 0));
 
-        JLabel lblFoto = new JLabel("SIN FOTO", SwingConstants.CENTER);
+        lblFoto = new JLabel("SIN FOTO", SwingConstants.CENTER);
         lblFoto.setPreferredSize(new Dimension(130, 160));
         lblFoto.setMaximumSize(new Dimension(130, 160));
         lblFoto.setOpaque(true);
@@ -82,13 +106,20 @@ public class SwingMainWindow extends JFrame implements UIContract {
         Font valueFont = new Font("Segoe UI", Font.BOLD, 13);
 
         panelInfo.add(crearLabel("Nombre:", labelFont));
-        panelInfo.add(crearLabel("----", valueFont));
+        lblValNombre = crearLabel("----", valueFont); 
+        panelInfo.add(lblValNombre);
+
         panelInfo.add(crearLabel("Rol:", labelFont));
-        panelInfo.add(crearLabel("----", valueFont));
+        lblValRol = crearLabel("----", valueFont);    
+        panelInfo.add(lblValRol);
+
         panelInfo.add(crearLabel("Estado:", labelFont));
-        panelInfo.add(crearLabel("----", valueFont));
+        lblValEstadoUsuario = crearLabel("----", valueFont); 
+        panelInfo.add(lblValEstadoUsuario);
+
         panelInfo.add(crearLabel("Cédula:", labelFont));
-        panelInfo.add(crearLabel("----", valueFont));
+        lblValCedula = crearLabel("----", valueFont); 
+        panelInfo.add(lblValCedula);
 
         lblEstado = new JLabel("ESPERANDO LECTURA", SwingConstants.CENTER);
         lblEstado.setOpaque(true);
@@ -105,7 +136,6 @@ public class SwingMainWindow extends JFrame implements UIContract {
 
         panelCentral.add(panelCamara, BorderLayout.WEST);
         panelCentral.add(panelDatos, BorderLayout.CENTER);
-
         add(panelCentral, BorderLayout.CENTER);
 
         JPanel panelBotones = new JPanel(new FlowLayout(FlowLayout.RIGHT));
@@ -113,14 +143,26 @@ public class SwingMainWindow extends JFrame implements UIContract {
 
         JButton btnManual = new JButton("Registrar Entrada Manual");
         JButton btnLimpiar = new JButton("Limpiar Pantalla");
+        JButton btnExport = new JButton("Exportar CSV");
         JButton btnCerrar = new JButton("Cerrar Sesión");
 
         btnCerrar.setBackground(colorAcento);
         btnCerrar.setForeground(Color.WHITE);
         btnCerrar.setFocusPainted(false);
 
+        btnExport.addActionListener(e -> {
+            if(controller != null) controller.exportCsvDefault();
+        });
+        btnLimpiar.addActionListener(e -> limpiarPantalla());
+        btnCerrar.addActionListener(e -> {
+            if (controller != null) controller.stop();
+            dispose();
+            System.exit(0);
+        });
+
         panelBotones.add(btnManual);
         panelBotones.add(btnLimpiar);
+        panelBotones.add(btnExport);
         panelBotones.add(btnCerrar);
 
         add(panelBotones, BorderLayout.SOUTH);
@@ -132,20 +174,58 @@ public class SwingMainWindow extends JFrame implements UIContract {
         return lbl;
     }
 
+    public void setController(AccessController controller) {
+        this.controller = controller;
+    }
+
     @Override
     public void mostrarEstado(String mensaje) {
         lblEstado.setText(mensaje);
 
-        if (mensaje.toUpperCase().contains("CONCEDIDO")) {
-            lblEstado.setBackground(new Color(0, 153, 76));
+        if (mensaje.toUpperCase().contains("GARANTIZADO") || mensaje.toUpperCase().contains("CONCEDIDO")) {
+            lblEstado.setBackground(new Color(0, 153, 76)); // Verde
             lblEstado.setForeground(Color.WHITE);
-        } else if (mensaje.toUpperCase().contains("DENEGADO")) {
-            lblEstado.setBackground(new Color(204, 0, 0));
+        } else if (mensaje.toUpperCase().contains("DENEGADO") || mensaje.toUpperCase().contains("ERROR")) {
+            lblEstado.setBackground(new Color(204, 0, 0)); // Rojo
             lblEstado.setForeground(Color.WHITE);
         } else {
-            lblEstado.setBackground(new Color(220, 220, 220));
+            lblEstado.setBackground(new Color(220, 220, 220)); // Gris
             lblEstado.setForeground(Color.DARK_GRAY);
         }
+    }
+
+    @Override
+    public void updateFrame(BufferedImage frame) {
+        if (frame != null) {
+            BufferedImage mirrored = mirror(frame);
+
+            Image scaled = mirrored.getScaledInstance(lblCamara.getWidth(), lblCamara.getHeight(), Image.SCALE_SMOOTH);
+            lblCamara.setIcon(new ImageIcon(scaled));
+            lblCamara.setText("");
+        }
+    }
+    @Override
+    public void showGranted(UsuarioDTO usuario, String codigoQR) {
+        if (usuario != null) {
+            String nombreCompleto = usuario.getPrimerNombre() + " " + usuario.getPrimerApellido();
+            
+            lblValNombre.setText(nombreCompleto);
+            lblValRol.setText(nvl(usuario.getNombreRol()));
+            lblValEstadoUsuario.setText(usuario.getEstado());
+            lblValCedula.setText(usuario.getCedula());
+
+            //Carga la foto
+            setFoto(usuario.getFoto());
+
+            mostrarEstado("ACCESO GARANTIZADO");
+        }
+    }
+
+    @Override
+    public void showDenied(String motivo, String codigoQR) {
+        mostrarEstado("ACCESO DENEGADO: " + motivo);
+        lblValNombre.setText("----");
+        lblValRol.setText("----");
     }
 
     @Override
@@ -153,5 +233,50 @@ public class SwingMainWindow extends JFrame implements UIContract {
         lblEstado.setText("ESPERANDO LECTURA");
         lblEstado.setBackground(new Color(220, 220, 220));
         lblEstado.setForeground(Color.DARK_GRAY);
+        lblValNombre.setText("----");
+        lblValRol.setText("----");
+        lblValCedula.setText("----");
+        lblValEstadoUsuario.setText("----");
+        lblFoto.setIcon(null);
+        lblFoto.setText("SIN FOTO");
+    }
+    private void setFoto(String path) {
+        try {
+            if (path == null || path.trim().isEmpty()) {
+                lblFoto.setIcon(null);
+                lblFoto.setText("SIN FOTO");
+                return;
+            }
+            File f = new File(path);
+            if (!f.exists()) {
+                //  buscar en carpeta relativa si solo viene el nombre
+                f = new File("fotos_usuarios", path);
+            }
+            if (f.exists()) {
+                BufferedImage img = ImageIO.read(f);
+                Image scaled = img.getScaledInstance(130, 160, Image.SCALE_SMOOTH);
+                lblFoto.setIcon(new ImageIcon(scaled));
+                lblFoto.setText("");
+            } else {
+                lblFoto.setIcon(null);
+                lblFoto.setText("NO ENCONTRADA");
+            }
+        } catch (Exception e) {
+            lblFoto.setText("ERROR FOTO");
+            lblFoto.setIcon(null);
+        }
+    }
+
+    private BufferedImage mirror(BufferedImage src) {
+        // Invierte la imagen horizontalmente
+        AffineTransform tx = AffineTransform.getScaleInstance(-1, 1);
+        tx.translate(-src.getWidth(), 0);
+        AffineTransformOp op = new AffineTransformOp(tx, AffineTransformOp.TYPE_NEAREST_NEIGHBOR);
+        return op.filter(src, null);
+    }
+
+    private String nvl(String s) {
+        return (s == null) ? "" : s;
     }
 }
+
