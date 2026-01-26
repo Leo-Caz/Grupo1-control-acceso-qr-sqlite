@@ -1,8 +1,8 @@
 import javax.swing.SwingUtilities;
 import javax.swing.UIManager;
 
-import Controller.AccessController;
-import UI.SwingMainWindow;
+import controller.AccessController;
+import ui.SwingMainWindow;
 
 public class App {
     public static void main(String[] args) {
