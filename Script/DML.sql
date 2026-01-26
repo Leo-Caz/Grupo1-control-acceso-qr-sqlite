@@ -34,8 +34,8 @@ INSERT INTO Usuario
 (IdCatalogoTipoUsuario, IdCatalogoSexo, IdCatalogoEstadoCivil, IdCatalogoRaza,
  Cedula, PrimerNombre, SegundoNombre, PrimerApellido, SegundoApellido, Foto)
 VALUES
-(1, 7, 11, 17, '1234567890', 'Juan', 'Carlos', 'Perez', 'Lopez', 'fotos/juan.jpg'),
-(2, 8, 13, 16, '9876543210', 'Maria','Elena',  'Gonzalez','Vera','fotos/maria.jpg');
+(1, 7, 11, 17, '1234567890', 'Juan', 'Carlos', 'Perez', 'Lopez', 'juan.jpg'),
+(2, 8, 13, 16, '9876543210', 'Maria','Elena',  'Gonzalez','Vera','maria.jpg');
 
 
 

@@ -9,16 +9,12 @@ import java.util.concurrent.TimeUnit;
 
 import javax.swing.SwingUtilities;
 
-import DataAccess.CarnetDAO;
-import DataAccess.DTO.CarnetDTO;
+import BusinessLogic.Entities.AsistenciaBL;
 import DataAccess.DTO.UsuarioDTO;
-import DataAccess.RegistroDAO;
-import DataAccess.Reports.AsistenciaCsvExporter;
-import DataAccess.UsuarioDAO;
+import ui.UIContract;
 import camera.CameraService;
 import camera.CameraServiceImpl;
 import qr.ZXingDecoder;
-import ui.UIContract;
 
 public class AccessController {
 
@@ -26,10 +22,7 @@ public class AccessController {
     private final CameraService cameraService;
     private final ScheduledExecutorService executor;
     
-    // DAOs
-    private final UsuarioDAO usuarioDAO;
-    private final CarnetDAO carnetDAO;
-    private final RegistroDAO registroDAO;
+    private final AsistenciaBL asistenciaBL;
 
     // Estado del sistema
     private boolean isRunning = false;
@@ -44,9 +37,7 @@ public class AccessController {
         this.executor = Executors.newSingleThreadScheduledExecutor();
         
         // Inicializar DAOs
-        this.usuarioDAO = new UsuarioDAO();
-        this.carnetDAO = new CarnetDAO();
-        this.registroDAO = new RegistroDAO();
+        this.asistenciaBL = new AsistenciaBL();
     }
 
     public void start() {
@@ -101,47 +92,39 @@ public class AccessController {
         lastQrCode = qrCode;
         lastAccessTime = now;
 
+       // Delegamos toda la validación a la capa de negocio (BL)
         try {
-            // Buscar Carnet (Método corregido según tu CarnetDAO)
-            CarnetDTO carnet = carnetDAO.readByCodigoQR(qrCode);
+            // La BL se encarga de validar carnet, usuario y registrar.
+            // Si algo falla, lanza una excepción con el mensaje exacto.
+            UsuarioDTO usuario = asistenciaBL.registrarAcceso(qrCode);
 
-            if (carnet != null && "A".equals(carnet.getEstado())) {
-                // Buscar Usuario
-                UsuarioDTO usuario = usuarioDAO.readById(carnet.getIdUsuario());
-                
-                if (usuario != null && "A".equals(usuario.getEstado())) {
-                    // --- ACCESO CONCEDIDO ---
-                    
-                    // Registrar en BD (Usando método optimizado o estándar)
-                    registroDAO.createByQr(qrCode); 
-                    
-                    // Actualizar UI
-                    SwingUtilities.invokeLater(() -> {
-                        view.showGranted(usuario, qrCode);
-                        Toolkit.getDefaultToolkit().beep(); // Sonido
-                    });
-                } else {
-                    SwingUtilities.invokeLater(() -> view.showDenied("USUARIO INACTIVO", qrCode));
-                }
-            } else {
-                SwingUtilities.invokeLater(() -> view.showDenied("QR NO REGISTRADO", qrCode));
-            }
+            // Si no lanzó excepción, es ÉXITO:
+            SwingUtilities.invokeLater(() -> {
+                view.showGranted(usuario, qrCode);
+                Toolkit.getDefaultToolkit().beep();
+            });
 
         } catch (Exception e) {
-            e.printStackTrace();
-            SwingUtilities.invokeLater(() -> view.showDenied("ERROR BD", qrCode));
+            // Si la BL lanzó error (Usuario inactivo, QR no existe, etc.)
+            // Capturamos el mensaje (e.getMessage()) y lo mostramos.
+            SwingUtilities.invokeLater(() -> view.showDenied(e.getMessage(), qrCode));
+            
+            // Opcional: imprimir el stacktrace solo si es un error de sistema y no de validación
+            if (!e.getMessage().equals("QR NO REGISTRADO") && !e.getMessage().equals("USUARIO INACTIVO")) {
+                 e.printStackTrace();
+            }
         }
     }
     
     public void exportCsvDefault() {
         try {
             view.mostrarEstado("GENERANDO CSV...");
-            AsistenciaCsvExporter exporter = new AsistenciaCsvExporter();
-            // Exporta a la raíz del proyecto
-            exporter.export(Paths.get("asistencia.csv"));
+            
+            // Delegamos la exportación a la BL
+            asistenciaBL.generarReporteCsv(Paths.get("asistencia.csv"));
             
             view.mostrarEstado("CSV EXPORTADO: asistencia.csv");
-            // Restaurar estado después de 2 segundos
+            
             new Thread(() -> {
                 try { Thread.sleep(2000); } catch (Exception e){}
                 SwingUtilities.invokeLater(view::limpiarPantalla);

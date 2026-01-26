@@ -1,8 +1,9 @@
-package BussinessLogic.Entities;
+package BusinessLogic.Entities;
 
 import java.util.List;
-import DataAccess.UsuarioDAO;
+
 import DataAccess.DTO.UsuarioDTO;
+import DataAccess.UsuarioDAO;
 
 public class UsuarioBL {
     private UsuarioDAO uDAO = new UsuarioDAO();

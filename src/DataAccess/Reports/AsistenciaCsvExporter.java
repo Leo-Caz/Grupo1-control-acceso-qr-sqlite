@@ -35,7 +35,9 @@ public class AsistenciaCsvExporter extends DataHelperSQLite {
             "ORDER BY r.FechaEntrada ASC";
 
         try {
-            Files.createDirectories(outputCsv.getParent());
+            if (outputCsv.getParent() != null) {
+                Files.createDirectories(outputCsv.getParent());
+            }
 
             Connection conn = openConnection();
             PreparedStatement ps = conn.prepareStatement(query);

@@ -1,0 +1,88 @@
+<mxfile host="65bd71144e">
+    <diagram id="u-umIOLbod3NHO39p9TJ" name="Página-1">
+        <mxGraphModel dx="1693" dy="825" grid="1" gridSize="10" guides="1" tooltips="1" connect="1" arrows="1" fold="1" page="1" pageScale="1" pageWidth="827" pageHeight="1169" math="0" shadow="0">
+            <root>
+                <mxCell id="0"/>
+                <mxCell id="1" parent="0"/>
+                <mxCell id="6" value="EscanerAcceso" style="verticalAlign=top;align=left;overflow=fill;html=1;whiteSpace=wrap;fontStyle=1" parent="1" vertex="1">
+                    <mxGeometry x="-380" y="30" width="570" height="560" as="geometry"/>
+                </mxCell>
+                <mxCell id="3" value="App" style="shape=umlActor;verticalLabelPosition=bottom;verticalAlign=top;html=1;outlineConnect=0;fillColor=#dae8fc;strokeColor=#6c8ebf;" parent="1" vertex="1">
+                    <mxGeometry x="290" y="280" width="30" height="60" as="geometry"/>
+                </mxCell>
+                <mxCell id="7" value="Procesar la entrada de video de la camara para decodificar codigo QR" style="ellipse;whiteSpace=wrap;html=1;fillColor=#dae8fc;strokeColor=#6c8ebf;" parent="1" vertex="1">
+                    <mxGeometry x="-200" y="214" width="150" height="90" as="geometry"/>
+                </mxCell>
+                <mxCell id="8" value="&lt;div&gt;Usuario&lt;/div&gt;" style="shape=umlActor;verticalLabelPosition=bottom;verticalAlign=top;html=1;outlineConnect=0;" parent="1" vertex="1">
+                    <mxGeometry x="-520" y="150" width="30" height="60" as="geometry"/>
+                </mxCell>
+                <mxCell id="11" value="" style="endArrow=open;endFill=1;endSize=12;html=1;rounded=0;entryX=1;entryY=0.5;entryDx=0;entryDy=0;exitX=0.5;exitY=0.5;exitDx=0;exitDy=0;exitPerimeter=0;" parent="1" source="3" target="7" edge="1">
+                    <mxGeometry width="160" relative="1" as="geometry">
+                        <mxPoint x="-290" y="419" as="sourcePoint"/>
+                        <mxPoint x="-75" y="234" as="targetPoint"/>
+                    </mxGeometry>
+                </mxCell>
+                <mxCell id="12" value="Aceptar QR y mostrar un mensaje de aprobado y mostrar la imagen del usuario" style="ellipse;whiteSpace=wrap;html=1;fillColor=#dae8fc;strokeColor=#6c8ebf;" parent="1" vertex="1">
+                    <mxGeometry x="-150" y="340" width="174" height="90" as="geometry"/>
+                </mxCell>
+                <mxCell id="13" value="" style="endArrow=open;endFill=1;endSize=12;html=1;rounded=0;entryX=1;entryY=0.5;entryDx=0;entryDy=0;exitX=0.5;exitY=0.5;exitDx=0;exitDy=0;exitPerimeter=0;" parent="1" source="3" target="12" edge="1">
+                    <mxGeometry width="160" relative="1" as="geometry">
+                        <mxPoint x="498" y="254" as="sourcePoint"/>
+                        <mxPoint x="270" y="374" as="targetPoint"/>
+                    </mxGeometry>
+                </mxCell>
+                <mxCell id="15" value="" style="endArrow=open;endFill=1;endSize=12;html=1;rounded=0;exitX=0.5;exitY=0.5;exitDx=0;exitDy=0;exitPerimeter=0;entryX=1;entryY=0.5;entryDx=0;entryDy=0;" parent="1" source="3" target="16" edge="1">
+                    <mxGeometry width="160" relative="1" as="geometry">
+                        <mxPoint x="585" y="184" as="sourcePoint"/>
+                        <mxPoint x="150" y="494" as="targetPoint"/>
+                    </mxGeometry>
+                </mxCell>
+                <mxCell id="16" value="Anotar en un archivo la hora de llegada" style="ellipse;whiteSpace=wrap;html=1;fillColor=#dae8fc;strokeColor=#6c8ebf;" parent="1" vertex="1">
+                    <mxGeometry x="-105" y="490" width="115" height="80" as="geometry"/>
+                </mxCell>
+                <mxCell id="17" value="" style="endArrow=open;endFill=1;endSize=12;html=1;rounded=0;exitX=0.5;exitY=0.5;exitDx=0;exitDy=0;exitPerimeter=0;" parent="1" source="8" target="7" edge="1">
+                    <mxGeometry width="160" relative="1" as="geometry">
+                        <mxPoint x="-15" y="344" as="sourcePoint"/>
+                        <mxPoint x="-580" y="414" as="targetPoint"/>
+                    </mxGeometry>
+                </mxCell>
+                <mxCell id="241" style="edgeStyle=none;html=1;exitX=0.5;exitY=0.5;exitDx=0;exitDy=0;exitPerimeter=0;" parent="1" source="62" target="239" edge="1">
+                    <mxGeometry relative="1" as="geometry"/>
+                </mxCell>
+                <mxCell id="62" value="&amp;nbsp;WebCamara" style="shape=umlActor;verticalLabelPosition=bottom;verticalAlign=top;html=1;outlineConnect=0;fillColor=#dae8fc;strokeColor=#6c8ebf;" parent="1" vertex="1">
+                    <mxGeometry x="290" y="140" width="30" height="60" as="geometry"/>
+                </mxCell>
+                <mxCell id="224" value="" style="endArrow=open;endFill=1;endSize=12;html=1;rounded=0;exitX=0.5;exitY=0.5;exitDx=0;exitDy=0;exitPerimeter=0;entryX=0.5;entryY=0;entryDx=0;entryDy=0;" parent="1" source="62" target="7" edge="1">
+                    <mxGeometry width="160" relative="1" as="geometry">
+                        <mxPoint x="445" y="314" as="sourcePoint"/>
+                        <mxPoint x="25" y="424" as="targetPoint"/>
+                    </mxGeometry>
+                </mxCell>
+                <mxCell id="229" value="&amp;lt;&amp;lt;include&amp;gt;&amp;gt;" style="html=1;verticalAlign=bottom;labelBackgroundColor=none;endArrow=open;endFill=0;dashed=1;rounded=0;" parent="1" source="12" target="16" edge="1">
+                    <mxGeometry width="160" relative="1" as="geometry">
+                        <mxPoint x="-49" y="215" as="sourcePoint"/>
+                        <mxPoint x="-39" y="255" as="targetPoint"/>
+                    </mxGeometry>
+                </mxCell>
+                <mxCell id="232" value="Rechazar QR y mostrar un mensaje Acceso Denegado" style="ellipse;whiteSpace=wrap;html=1;" parent="1" vertex="1">
+                    <mxGeometry x="-330" y="304" width="111" height="93" as="geometry"/>
+                </mxCell>
+                <mxCell id="233" value="&amp;lt;&amp;lt;extend&amp;gt;&amp;gt;" style="html=1;verticalAlign=bottom;labelBackgroundColor=none;endArrow=open;endFill=0;dashed=1;rounded=0;" parent="1" source="232" target="7" edge="1">
+                    <mxGeometry width="160" relative="1" as="geometry">
+                        <mxPoint x="-141" y="644" as="sourcePoint"/>
+                        <mxPoint x="130" y="584" as="targetPoint"/>
+                    </mxGeometry>
+                </mxCell>
+                <mxCell id="239" value="Utilizar un periferico externo al computador&amp;nbsp;" style="ellipse;whiteSpace=wrap;html=1;" parent="1" vertex="1">
+                    <mxGeometry x="-180.5" y="75.5" width="111" height="93" as="geometry"/>
+                </mxCell>
+                <mxCell id="243" value="&amp;lt;&amp;lt;extend&amp;gt;&amp;gt;" style="html=1;verticalAlign=bottom;labelBackgroundColor=none;endArrow=open;endFill=0;dashed=1;rounded=0;exitX=0.5;exitY=0;exitDx=0;exitDy=0;" parent="1" source="12" target="7" edge="1">
+                    <mxGeometry width="160" relative="1" as="geometry">
+                        <mxPoint x="-220" y="333" as="sourcePoint"/>
+                        <mxPoint x="-168" y="301" as="targetPoint"/>
+                    </mxGeometry>
+                </mxCell>
+            </root>
+        </mxGraphModel>
+    </diagram>
+</mxfile>

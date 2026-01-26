@@ -1,9 +1,10 @@
 package qr;
 
-import camera.CameraService;
-import camera.CameraServiceImpl;
 import java.awt.image.BufferedImage;
 import java.util.Optional;
+
+import camera.CameraService;
+import camera.CameraServiceImpl;
 
 public class CameraQRServiceImpl implements QRService {
 
