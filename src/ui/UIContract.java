@@ -1,5 +1,7 @@
 package ui;
 
+import java.awt.image.BufferedImage;
+
 import DataAccess.DTO.UsuarioDTO;
 
 public interface UIContract {

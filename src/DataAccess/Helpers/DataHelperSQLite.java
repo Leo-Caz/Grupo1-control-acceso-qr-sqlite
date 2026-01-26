@@ -7,6 +7,7 @@ package DataAccess.Helpers;
 import java.sql.Connection;
 import java.sql.DriverManager;
 import java.sql.SQLException;
+import java.sql.Statement;
 import java.time.LocalDateTime;
 import java.time.format.DateTimeFormatter;
 
@@ -43,7 +44,6 @@ public abstract class DataHelperSQLite {
             throw new Exception("Error al cerrar la conexión: " + e.getMessage());
         }
     }
-}
 
     protected String getDataTimeNow() {
         return dtf.format(now).toString();

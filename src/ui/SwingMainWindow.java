@@ -1,14 +1,31 @@
 package ui;
 
-import javax.swing.*;
-import java.awt.*;
+import java.awt.BorderLayout;
+import java.awt.Color;
+import java.awt.Component;
+import java.awt.Dimension;
+import java.awt.FlowLayout;
+import java.awt.Font;
+import java.awt.GridLayout;
+import java.awt.Image;
 import java.awt.event.WindowAdapter;
 import java.awt.event.WindowEvent;
 import java.awt.geom.AffineTransform;
 import java.awt.image.AffineTransformOp;
 import java.awt.image.BufferedImage;
 import java.io.File;
-import javax.imageio.*;
+
+import javax.imageio.ImageIO;
+import javax.swing.BorderFactory;
+import javax.swing.Box;
+import javax.swing.BoxLayout;
+import javax.swing.ImageIcon;
+import javax.swing.JButton;
+import javax.swing.JFrame;
+import javax.swing.JLabel;
+import javax.swing.JPanel;
+import javax.swing.JTabbedPane;
+import javax.swing.SwingConstants;
 
 import DataAccess.DTO.UsuarioDTO;
 import controller.AccessController;
@@ -241,31 +258,42 @@ public class SwingMainWindow extends JFrame implements UIContract {
         lblFoto.setText("SIN FOTO");
     }
     private void setFoto(String path) {
-        try {
-            if (path == null || path.trim().isEmpty()) {
-                lblFoto.setIcon(null);
-                lblFoto.setText("SIN FOTO");
-                return;
-            }
-            File f = new File(path);
-            if (!f.exists()) {
-                //  buscar en carpeta relativa si solo viene el nombre
-                f = new File("fotos_usuarios", path);
-            }
-            if (f.exists()) {
-                BufferedImage img = ImageIO.read(f);
-                Image scaled = img.getScaledInstance(130, 160, Image.SCALE_SMOOTH);
+    try {
+        if (path == null || path.trim().isEmpty()) {
+            lblFoto.setIcon(null);
+            lblFoto.setText("SIN FOTO");
+            return;
+        }
+
+        File f = new File(path);
+        
+        // Si no existe tal cual viene en la BD, buscamos en la carpeta predefinida
+        if (!f.exists()) {
+            f = new File("fotos_usuarios", path);
+        }
+
+        if (f.exists()) {
+            BufferedImage img = ImageIO.read(f);
+            if (img != null) {
+                // Ajustamos la imagen al tamaño del label (130x160)
+                Image scaled = img.getScaledInstance(lblFoto.getWidth(), lblFoto.getHeight(), Image.SCALE_SMOOTH);
                 lblFoto.setIcon(new ImageIcon(scaled));
                 lblFoto.setText("");
             } else {
-                lblFoto.setIcon(null);
-                lblFoto.setText("NO ENCONTRADA");
+                lblFoto.setText("FORMATO INV.");
             }
-        } catch (Exception e) {
-            lblFoto.setText("ERROR FOTO");
+        } else {
             lblFoto.setIcon(null);
+            lblFoto.setText("NO ENCONTRADA");
+            // Imprime en consola para debug: ayuda a ver qué ruta está intentando leer
+            System.out.println("No se encontró la foto en: " + f.getAbsolutePath());
         }
+    } catch (Exception e) {
+        lblFoto.setText("ERROR FOTO");
+        lblFoto.setIcon(null);
+        e.printStackTrace();
     }
+}
 
     private BufferedImage mirror(BufferedImage src) {
         // Invierte la imagen horizontalmente

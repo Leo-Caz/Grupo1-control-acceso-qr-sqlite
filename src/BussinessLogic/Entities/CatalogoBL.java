@@ -1,23 +1,25 @@
 package BussinessLogic.Entities;
 
-import java.util.ArrayList;
 import java.util.List;
-import DataAccess.CatalogoDAO; 
-import DataAccess.DTO.CatalogoDTO; 
+
+import DataAccess.CatalogoDAO;
+import DataAccess.DTO.CatalogoDTO;
 
 public class CatalogoBL {
-    private CatalogoDAO catDAO = new CatalogoDAO(); 
-    
+    private final CatalogoDAO catDAO = new CatalogoDAO();
+
     public CatalogoBL() {}
+
     /**
-     * Método genérico.
-     * En lugar de getAll(), usamos getByTipo(int idTipo)
-     * Así la UI puede pedir: getByTipo(1) para Roles, getByTipo(2) para Sexos, etc.
+     * En lugar de getAll(), se usa getByTipo(int idTipo)
+     * para obtener listas filtradas (Roles, Sexos, Estado Civil, Raza, etc.).
      */
     public List<CatalogoDTO> getByTipo(int idTipo) throws Exception {
-        List<CatalogoDTO> lst = catDAO.readByType(idTipo); 
+        List<CatalogoDTO> lst = catDAO.readByType(idTipo);
         for (CatalogoDTO dto : lst) {
-            dto.setNombre(dto.getNombre().toUpperCase());
+            if (dto.getNombre() != null) {
+                dto.setNombre(dto.getNombre().toUpperCase());
+            }
         }
         return lst;
     }
@@ -37,7 +39,4 @@ public class CatalogoBL {
     public boolean delete(int idReg) throws Exception {
         return catDAO.delete(idReg);
     }
-    public List<CatalogoDTO> readByType(int idCatalogoTipo) throws Exception {
-    List<CatalogoDTO> lst = new ArrayList<>();
-    String
 }
