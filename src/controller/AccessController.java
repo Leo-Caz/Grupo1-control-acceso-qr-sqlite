@@ -84,7 +84,7 @@ public class AccessController {
     private void handleQrDetection(String qrCode) {
         long now = System.currentTimeMillis();
 
-        // 4. Validar Cooldown (Evitar múltiples registros del mismo QR en < 4 seg)
+        // 4. Validar Cooldown (Evitar múltiples registros del mismo QR en < 3 seg)
         if (qrCode.equals(lastQrCode) && (now - lastAccessTime < COOLDOWN_MS)) {
             return;
         }
