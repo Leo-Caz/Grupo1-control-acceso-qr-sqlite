@@ -35,7 +35,7 @@ INSERT INTO Usuario
  Cedula, PrimerNombre, SegundoNombre, PrimerApellido, SegundoApellido, Foto)
 VALUES
 (1, 7, 11, 17, '1234567890', 'Juan', 'Carlos', 'Perez', 'Lopez', 'juan.jpg'),
-(2, 8, 13, 16, '9876543210', 'Maria','Elena',  'Gonzalez','Vera','maria.jpg');
+(2, 8, 13, 16, '9876543210', 'Maria','Elena',  'Gonzalez','Vera','Nmaria.jpg');
 
 
 
