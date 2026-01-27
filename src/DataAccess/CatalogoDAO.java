@@ -12,28 +12,28 @@ import java.util.List;
 
 import DataAccess.DTO.CatalogoDTO;
 import DataAccess.Helpers.DataHelperSQLite;
-import Framework.PatException;
+import Infrastructure.Config.BNAppException;
 
 public class CatalogoDAO extends DataHelperSQLite implements IDAO<CatalogoDTO> {
 
     @Override
-    public boolean create(CatalogoDTO entity) throws Exception {
+    public boolean create(CatalogoDTO entity) throws BNAppException {
         String query = "INSERT INTO Catalogo (IdCatalogoTipo, Nombre, Descripcion) VALUES (?, ?, ?)";
         try {
             Connection conn = openConnection();
             PreparedStatement pstmt = conn.prepareStatement(query);
-            pstmt.setInt(1, entity.getIdCatalogoTipo()); // Ya no es fijo, viene del objeto
+            pstmt.setInt(1, entity.getIdCatalogoTipo());
             pstmt.setString(2, entity.getNombre());
             pstmt.setString(3, entity.getDescripcion());
             pstmt.executeUpdate();
             return true;
         } catch (SQLException e) {
-            throw new PatException(e.getMessage(), getClass().getName(), "create()");
+            throw new BNAppException(e, getClass().getName(), "create()");
         }
     }
 
     @Override
-    public List<CatalogoDTO> readAll() throws Exception {
+    public List<CatalogoDTO> readAll() throws BNAppException {
         List<CatalogoDTO> lst = new ArrayList<>();
         String query = " SELECT IdCatalogo, IdCatalogoTipo, Nombre, Descripcion, Estado, FechaCreacion, FechaModificacion "
                      + " FROM Catalogo "
@@ -54,7 +54,7 @@ public class CatalogoDAO extends DataHelperSQLite implements IDAO<CatalogoDTO> {
                 ));
             }
         } catch (SQLException e) {
-            throw new PatException(e.getMessage(), getClass().getName(), "readAll()");
+            throw new BNAppException(e, getClass().getName(), "readAll()");
         }
         return lst;
     }
@@ -64,7 +64,7 @@ public class CatalogoDAO extends DataHelperSQLite implements IDAO<CatalogoDTO> {
      * Permite obtener listas filtradas (Solo Sexos, Solo Roles, etc.)
      * @param idCatalogoTipo El ID del tipo de lista que quieres (ej: 1=Roles, 2=Sexo)
      */
-    public List<CatalogoDTO> readByType(int idCatalogoTipo) throws Exception {
+    public List<CatalogoDTO> readByType(int idCatalogoTipo) throws BNAppException {
         List<CatalogoDTO> lst = new ArrayList<>();
         String query = " SELECT IdCatalogo, IdCatalogoTipo, Nombre, Descripcion, Estado, FechaCreacion, FechaModificacion "
                      + " FROM Catalogo "
@@ -86,13 +86,13 @@ public class CatalogoDAO extends DataHelperSQLite implements IDAO<CatalogoDTO> {
                 ));
             }
         } catch (SQLException e) {
-            throw new PatException(e.getMessage(), getClass().getName(), "readByType()");
+            throw new BNAppException(e, getClass().getName(), "readByType()");
         }
         return lst;
     }
 
     @Override
-    public boolean update(CatalogoDTO entity) throws Exception {
+    public boolean update(CatalogoDTO entity) throws BNAppException {
         DateTimeFormatter dtf = DateTimeFormatter.ofPattern("yyyy-MM-dd HH:mm:ss");
         LocalDateTime now = LocalDateTime.now();
         String query = " UPDATE Catalogo SET IdCatalogoTipo = ?, Nombre = ?, Descripcion = ?, FechaModificacion = ? "
@@ -108,12 +108,12 @@ public class CatalogoDAO extends DataHelperSQLite implements IDAO<CatalogoDTO> {
             pstmt.executeUpdate();
             return true;
         } catch (SQLException e) {
-            throw new PatException(e.getMessage(), getClass().getName(), "update()");
+            throw new BNAppException(e, getClass().getName(), "update()");
         }
     }
 
     @Override
-    public boolean delete(int id) throws Exception {
+    public boolean delete(int id) throws BNAppException {
         String query = " UPDATE Catalogo SET Estado = ? WHERE IdCatalogo = ? ";
         try {
             Connection conn = openConnection();
@@ -123,13 +123,13 @@ public class CatalogoDAO extends DataHelperSQLite implements IDAO<CatalogoDTO> {
             pstmt.executeUpdate();
             return true;
         } catch (SQLException e) {
-            throw new PatException(e.getMessage(), getClass().getName(), "delete()");
+            throw new BNAppException(e, getClass().getName(), "delete()");
         }
     }
 
     @Override
-    public CatalogoDTO readById(Integer id) throws Exception {
-        CatalogoDTO s = new CatalogoDTO();
+    public CatalogoDTO readById(Integer id) throws BNAppException {
+        CatalogoDTO s = null; // Corregido para retornar null si no existe
         String query = " SELECT IdCatalogo, IdCatalogoTipo, Nombre, Descripcion, Estado, FechaCreacion, FechaModificacion "
                      + " FROM Catalogo "
                      + " WHERE Estado = 'A' AND IdCatalogo = ? ";
@@ -150,12 +150,12 @@ public class CatalogoDAO extends DataHelperSQLite implements IDAO<CatalogoDTO> {
                 );
             }
         } catch (SQLException e) {
-            throw new PatException(e.getMessage(), getClass().getName(), "readById()");
+            throw new BNAppException(e, getClass().getName(), "readById()");
         }
         return s;
     }
     
-    public Integer getRowCount() throws Exception {
+    public Integer getRowCount() throws BNAppException {
         String query = " SELECT COUNT(*) FROM Catalogo WHERE Estado = 'A' ";
         try {
             Connection conn = openConnection();
@@ -165,7 +165,7 @@ public class CatalogoDAO extends DataHelperSQLite implements IDAO<CatalogoDTO> {
                 return rs.getInt(1);
             }
         } catch (SQLException e) {
-            throw new PatException(e.getMessage(), getClass().getName(), "getRowCount()");
+            throw new BNAppException(e, getClass().getName(), "getRowCount()");
         }
         return 0;
     }

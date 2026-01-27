@@ -12,12 +12,12 @@ import java.util.List;
 
 import DataAccess.DTO.CarnetDTO;
 import DataAccess.Helpers.DataHelperSQLite;
-import Framework.PatException;
+import Infrastructure.Config.BNAppException;
 
 public class CarnetDAO extends DataHelperSQLite implements IDAO<CarnetDTO> {
 
     @Override
-    public boolean create(CarnetDTO entity) throws Exception {
+    public boolean create(CarnetDTO entity) throws BNAppException {
         String query = "INSERT INTO Carnet (IdUsuario, CodigoQR) VALUES (?, ?)";
         try {
             Connection conn = openConnection();
@@ -29,14 +29,13 @@ public class CarnetDAO extends DataHelperSQLite implements IDAO<CarnetDTO> {
             pstmt.executeUpdate();
             return true;
         } catch (SQLException e) {
-            throw new PatException(e.getMessage(), getClass().getName(), "create()");
+            throw new BNAppException(e, getClass().getName(), "create()");
         }
     }
 
     @Override
-    public List<CarnetDTO> readAll() throws Exception {
+    public List<CarnetDTO> readAll() throws BNAppException {
         List<CarnetDTO> lst = new ArrayList<>();
-
         String query = "SELECT IdCarnet, IdUsuario, CodigoQR, Estado, FechaCreacion, FechaModificacion " +
                        "FROM Carnet WHERE Estado = 'A'";
 
@@ -57,16 +56,14 @@ public class CarnetDAO extends DataHelperSQLite implements IDAO<CarnetDTO> {
                 lst.add(c);
             }
         } catch (SQLException e) {
-            throw new PatException(e.getMessage(), getClass().getName(), "readAll()");
+            throw new BNAppException(e, getClass().getName(), "readAll()");
         }
-
         return lst;
     }
 
     @Override
-    public CarnetDTO readById(Integer id) throws Exception {
+    public CarnetDTO readById(Integer id) throws BNAppException {
         CarnetDTO c = null;
-
         String query = "SELECT IdCarnet, IdUsuario, CodigoQR, Estado, FechaCreacion, FechaModificacion " +
                        "FROM Carnet WHERE Estado = 'A' AND IdCarnet = ?";
 
@@ -87,14 +84,13 @@ public class CarnetDAO extends DataHelperSQLite implements IDAO<CarnetDTO> {
                 );
             }
         } catch (SQLException e) {
-            throw new PatException(e.getMessage(), getClass().getName(), "readById()");
+            throw new BNAppException(e, getClass().getName(), "readById()");
         }
-
         return c;
     }
 
     @Override
-    public boolean update(CarnetDTO entity) throws Exception {
+    public boolean update(CarnetDTO entity) throws BNAppException {
         DateTimeFormatter dtf = DateTimeFormatter.ofPattern("yyyy-MM-dd HH:mm:ss");
         LocalDateTime now = LocalDateTime.now();
 
@@ -113,12 +109,12 @@ public class CarnetDAO extends DataHelperSQLite implements IDAO<CarnetDTO> {
             pstmt.executeUpdate();
             return true;
         } catch (SQLException e) {
-            throw new PatException(e.getMessage(), getClass().getName(), "update()");
+            throw new BNAppException(e, getClass().getName(), "update()");
         }
     }
 
     @Override
-    public boolean delete(int id) throws Exception {
+    public boolean delete(int id) throws BNAppException {
         String query = "UPDATE Carnet SET Estado = ? WHERE IdCarnet = ?";
         try {
             Connection conn = openConnection();
@@ -128,16 +124,12 @@ public class CarnetDAO extends DataHelperSQLite implements IDAO<CarnetDTO> {
             pstmt.executeUpdate();
             return true;
         } catch (SQLException e) {
-            throw new PatException(e.getMessage(), getClass().getName(), "delete()");
+            throw new BNAppException(e, getClass().getName(), "delete()");
         }
     }
 
-    /**
-     * Método clave del proyecto: QR -> Carnet activo
-     */
-    public CarnetDTO readByCodigoQR(String codigoQR) throws Exception {
+    public CarnetDTO readByCodigoQR(String codigoQR) throws BNAppException {
         CarnetDTO c = null;
-
         String query = "SELECT IdCarnet, IdUsuario, CodigoQR, Estado, FechaCreacion, FechaModificacion " +
                        "FROM Carnet WHERE Estado = 'A' AND CodigoQR = ?";
 
@@ -158,15 +150,13 @@ public class CarnetDAO extends DataHelperSQLite implements IDAO<CarnetDTO> {
                 );
             }
         } catch (SQLException e) {
-            throw new PatException(e.getMessage(), getClass().getName(), "readByCodigoQR()");
+            throw new BNAppException(e, getClass().getName(), "readByCodigoQR()");
         }
-
         return c;
     }
 
-    public CarnetDTO readByUsuarioId(Integer idUsuario) throws Exception {
+    public CarnetDTO readByUsuarioId(Integer idUsuario) throws BNAppException {
         CarnetDTO c = null;
-
         String query = "SELECT IdCarnet, IdUsuario, CodigoQR, Estado, FechaCreacion, FechaModificacion " +
                        "FROM Carnet WHERE Estado = 'A' AND IdUsuario = ?";
 
@@ -187,10 +177,8 @@ public class CarnetDAO extends DataHelperSQLite implements IDAO<CarnetDTO> {
                 );
             }
         } catch (SQLException e) {
-            throw new PatException(e.getMessage(), getClass().getName(), "readByUsuarioId()");
+            throw new BNAppException(e, getClass().getName(), "readByUsuarioId()");
         }
-
         return c;
     }
 }
-

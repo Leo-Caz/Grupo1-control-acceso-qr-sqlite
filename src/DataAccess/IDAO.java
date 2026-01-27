@@ -2,10 +2,12 @@ package DataAccess;
 
 import java.util.List;
 
+import Infrastructure.Config.BNAppException;
+
 public interface IDAO<T> {
-    boolean create(T entity) throws Exception;
-    List<T> readAll() throws Exception;
-    boolean update(T entity) throws Exception;
-    boolean delete(int id) throws Exception;
-    T readById(Integer id) throws Exception;
+    boolean create(T entity) throws BNAppException;
+    List<T> readAll() throws BNAppException;
+    boolean update(T entity) throws BNAppException;
+    boolean delete(int id) throws BNAppException;
+    T readById(Integer id) throws BNAppException;
 }

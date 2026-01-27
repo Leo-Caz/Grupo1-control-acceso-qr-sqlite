@@ -9,11 +9,12 @@ import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 
 import DataAccess.Helpers.DataHelperSQLite;
-import Framework.PatException;
+import Infrastructure.Config.BNAppException; // ✅ Nuevo Import
 
 public class AsistenciaCsvExporter extends DataHelperSQLite {
 
-    public void export(Path outputCsv) throws Exception {
+    public void export(Path outputCsv) throws BNAppException {
+        // Query optimizada para reporte plano
         String query =
             "SELECT " +
             "  r.FechaEntrada, " +
@@ -35,6 +36,7 @@ public class AsistenciaCsvExporter extends DataHelperSQLite {
             "ORDER BY r.FechaEntrada ASC";
 
         try {
+            // Aseguramos que la carpeta exista antes de escribir
             if (outputCsv.getParent() != null) {
                 Files.createDirectories(outputCsv.getParent());
             }
@@ -44,9 +46,11 @@ public class AsistenciaCsvExporter extends DataHelperSQLite {
             ResultSet rs = ps.executeQuery();
 
             try (BufferedWriter bw = Files.newBufferedWriter(outputCsv, StandardCharsets.UTF_8)) {
+                // Escribir Cabecera
                 bw.write("fecha_entrada,cedula,nombre_completo,codigo_qr,rol,sexo,estado_civil,raza");
                 bw.newLine();
 
+                // Escribir Filas
                 while (rs.next()) {
                     bw.write(csv(rs.getString(1)) + "," +
                              csv(rs.getString(2)) + "," +
@@ -60,10 +64,14 @@ public class AsistenciaCsvExporter extends DataHelperSQLite {
                 }
             }
         } catch (Exception e) {
-            throw new PatException(e.getMessage(), getClass().getName(), "export()");
+            // ✅ Captura unificada para SQL e I/O
+            throw new BNAppException(e, getClass().getName(), "export()");
         }
     }
 
+    /**
+     * Escapa caracteres especiales para mantener la integridad del CSV
+     */
     private static String csv(String s) {
         if (s == null) return "";
         boolean q = s.contains(",") || s.contains("\"") || s.contains("\n") || s.contains("\r");

@@ -10,13 +10,13 @@ import java.util.List;
 
 import DataAccess.DTO.RegistroDTO;
 import DataAccess.Helpers.DataHelperSQLite;
-import Framework.PatException;
+import Infrastructure.Config.BNAppException;
 
 public class RegistroDAO extends DataHelperSQLite implements IDAO<RegistroDTO> {
 
     @Override
-    public boolean create(RegistroDTO entity) throws Exception {
-        // FechaEntrada la deja por default (datetime now)
+    public boolean create(RegistroDTO entity) throws BNAppException {
+        // FechaEntrada la deja por default (datetime now) en la BD
         String query = "INSERT INTO Registro (IdUsuario, IdCarnet) VALUES (?, ?)";
         try {
             Connection conn = openConnection();
@@ -26,12 +26,12 @@ public class RegistroDAO extends DataHelperSQLite implements IDAO<RegistroDTO> {
             pstmt.executeUpdate();
             return true;
         } catch (SQLException e) {
-            throw new PatException(e.getMessage(), getClass().getName(), "create()");
+            throw new BNAppException(e, getClass().getName(), "create()");
         }
     }
 
     @Override
-    public List<RegistroDTO> readAll() throws Exception {
+    public List<RegistroDTO> readAll() throws BNAppException {
         List<RegistroDTO> lst = new ArrayList<>();
         String query = "SELECT IdRegistro, IdUsuario, IdCarnet, FechaEntrada, Estado " +
                        "FROM Registro WHERE Estado = 'A' ORDER BY FechaEntrada DESC";
@@ -51,13 +51,13 @@ public class RegistroDAO extends DataHelperSQLite implements IDAO<RegistroDTO> {
                 lst.add(r);
             }
         } catch (SQLException e) {
-            throw new PatException(e.getMessage(), getClass().getName(), "readAll()");
+            throw new BNAppException(e, getClass().getName(), "readAll()");
         }
         return lst;
     }
 
     @Override
-    public RegistroDTO readById(Integer id) throws Exception {
+    public RegistroDTO readById(Integer id) throws BNAppException {
         RegistroDTO r = null;
         String query = "SELECT IdRegistro, IdUsuario, IdCarnet, FechaEntrada, Estado " +
                        "FROM Registro WHERE Estado = 'A' AND IdRegistro = ?";
@@ -76,14 +76,14 @@ public class RegistroDAO extends DataHelperSQLite implements IDAO<RegistroDTO> {
                 );
             }
         } catch (SQLException e) {
-            throw new PatException(e.getMessage(), getClass().getName(), "readById()");
+            throw new BNAppException(e, getClass().getName(), "readById()");
         }
         return r;
     }
 
     @Override
-    public boolean update(RegistroDTO entity) throws Exception {
-        // Normalmente no se actualiza registro de asistencia; lo dejo por consistencia.
+    public boolean update(RegistroDTO entity) throws BNAppException {
+        // Normalmente no se actualiza registro de asistencia; se deja por consistencia.
         String query = "UPDATE Registro SET IdUsuario = ?, IdCarnet = ? WHERE IdRegistro = ?";
         try {
             Connection conn = openConnection();
@@ -94,12 +94,12 @@ public class RegistroDAO extends DataHelperSQLite implements IDAO<RegistroDTO> {
             pstmt.executeUpdate();
             return true;
         } catch (SQLException e) {
-            throw new PatException(e.getMessage(), getClass().getName(), "update()");
+            throw new BNAppException(e, getClass().getName(), "update()");
         }
     }
 
     @Override
-    public boolean delete(int id) throws Exception {
+    public boolean delete(int id) throws BNAppException {
         String query = "UPDATE Registro SET Estado = 'X' WHERE IdRegistro = ?";
         try {
             Connection conn = openConnection();
@@ -108,7 +108,7 @@ public class RegistroDAO extends DataHelperSQLite implements IDAO<RegistroDTO> {
             pstmt.executeUpdate();
             return true;
         } catch (SQLException e) {
-            throw new PatException(e.getMessage(), getClass().getName(), "delete()");
+            throw new BNAppException(e, getClass().getName(), "delete()");
         }
     }
 
@@ -116,7 +116,7 @@ public class RegistroDAO extends DataHelperSQLite implements IDAO<RegistroDTO> {
      * Método útil para el flujo del sistema: QR -> crea registro directo.
      * (Valida carnet activo, obtiene IdUsuario e IdCarnet y registra)
      */
-    public boolean createByQr(String codigoQR) throws Exception {
+    public boolean createByQr(String codigoQR) throws BNAppException {
         String query =
             "INSERT INTO Registro (IdUsuario, IdCarnet) " +
             "SELECT c.IdUsuario, c.IdCarnet " +
@@ -131,7 +131,7 @@ public class RegistroDAO extends DataHelperSQLite implements IDAO<RegistroDTO> {
             int rows = pstmt.executeUpdate();
             return rows > 0;
         } catch (SQLException e) {
-            throw new PatException(e.getMessage(), getClass().getName(), "createByQr()");
+            throw new BNAppException(e, getClass().getName(), "createByQr()");
         }
     }
 }

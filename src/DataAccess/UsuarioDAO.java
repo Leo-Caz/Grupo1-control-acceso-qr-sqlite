@@ -12,12 +12,12 @@ import java.util.List;
 
 import DataAccess.DTO.UsuarioDTO;
 import DataAccess.Helpers.DataHelperSQLite;
-import Framework.PatException;
+import Infrastructure.Config.BNAppException; 
 
 public class UsuarioDAO extends DataHelperSQLite implements IDAO<UsuarioDTO> {
 
     @Override
-    public boolean create(UsuarioDTO entity) throws Exception {
+    public boolean create(UsuarioDTO entity) throws BNAppException {
         String query = "INSERT INTO Usuario ("
                 + "IdCatalogoTipoUsuario, IdCatalogoSexo, IdCatalogoEstadoCivil, "
                 + "PrimerNombre, SegundoNombre, PrimerApellido, SegundoApellido, "
@@ -35,21 +35,18 @@ public class UsuarioDAO extends DataHelperSQLite implements IDAO<UsuarioDTO> {
             pstmt.setString(6, entity.getPrimerApellido());
             pstmt.setString(7, entity.getSegundoApellido());
             pstmt.setString(8, entity.getCedula());
-
-            // CORREGIDO: Ahora pasamos el Integer directo
             pstmt.setInt(9, entity.getIdCatalogoRaza());
-
             pstmt.setString(10, entity.getFoto());
 
             pstmt.executeUpdate();
             return true;
         } catch (SQLException e) {
-            throw new PatException(e.getMessage(), getClass().getName(), "create()");
+            throw new BNAppException(e, getClass().getName(), "create()");
         }
     }
 
     @Override
-    public List<UsuarioDTO> readAll() throws Exception {
+    public List<UsuarioDTO> readAll() throws BNAppException {
         List<UsuarioDTO> lst = new ArrayList<>();
 
         String query = " SELECT "
@@ -83,7 +80,6 @@ public class UsuarioDAO extends DataHelperSQLite implements IDAO<UsuarioDTO> {
                         rs.getString("PrimerApellido"),
                         rs.getString("SegundoApellido"),
                         rs.getString("Cedula"),
-                        // CORREGIDO: Recuperamos directo como Int
                         rs.getInt("IdCatalogoRaza"),
                         rs.getString("Foto"),
                         rs.getString("Estado"),
@@ -97,13 +93,13 @@ public class UsuarioDAO extends DataHelperSQLite implements IDAO<UsuarioDTO> {
                 lst.add(u);
             }
         } catch (SQLException e) {
-            throw new PatException(e.getMessage(), getClass().getName(), "readAll()");
+            throw new BNAppException(e, getClass().getName(), "readAll()");
         }
         return lst;
     }
 
     @Override
-    public UsuarioDTO readById(Integer id) throws Exception {
+    public UsuarioDTO readById(Integer id) throws BNAppException {
         UsuarioDTO u = null;
         String query = " SELECT "
                 + " u.IdUsuario, u.IdCatalogoTipoUsuario, u.IdCatalogoSexo, u.IdCatalogoEstadoCivil, u.IdCatalogoRaza, "
@@ -149,13 +145,13 @@ public class UsuarioDAO extends DataHelperSQLite implements IDAO<UsuarioDTO> {
                 );
             }
         } catch (SQLException e) {
-            throw new PatException(e.getMessage(), getClass().getName(), "readById()");
+            throw new BNAppException(e, getClass().getName(), "readById()");
         }
         return u;
     }
 
     @Override
-    public boolean update(UsuarioDTO entity) throws Exception {
+    public boolean update(UsuarioDTO entity) throws BNAppException {
         DateTimeFormatter dtf = DateTimeFormatter.ofPattern("yyyy-MM-dd HH:mm:ss");
         LocalDateTime now = LocalDateTime.now();
 
@@ -175,10 +171,7 @@ public class UsuarioDAO extends DataHelperSQLite implements IDAO<UsuarioDTO> {
             pstmt.setString(6, entity.getPrimerApellido());
             pstmt.setString(7, entity.getSegundoApellido());
             pstmt.setString(8, entity.getCedula());
-
-            // CORREGIDO: Directo Int
             pstmt.setInt(9, entity.getIdCatalogoRaza());
-
             pstmt.setString(10, entity.getFoto());
             pstmt.setString(11, dtf.format(now));
             pstmt.setInt(12, entity.getIdUsuario());
@@ -186,12 +179,12 @@ public class UsuarioDAO extends DataHelperSQLite implements IDAO<UsuarioDTO> {
             pstmt.executeUpdate();
             return true;
         } catch (SQLException e) {
-            throw new PatException(e.getMessage(), getClass().getName(), "update()");
+            throw new BNAppException(e, getClass().getName(), "update()");
         }
     }
 
     @Override
-    public boolean delete(int id) throws Exception {
+    public boolean delete(int id) throws BNAppException {
         String query = "UPDATE Usuario SET Estado = ? WHERE IdUsuario = ?";
         try {
             Connection conn = openConnection();
@@ -201,13 +194,12 @@ public class UsuarioDAO extends DataHelperSQLite implements IDAO<UsuarioDTO> {
             pstmt.executeUpdate();
             return true;
         } catch (SQLException e) {
-            throw new PatException(e.getMessage(), getClass().getName(), "delete()");
+            throw new BNAppException(e, getClass().getName(), "delete()");
         }
     }
 
-    public UsuarioDTO readByCedula(String cedula) throws Exception {
+    public UsuarioDTO readByCedula(String cedula) throws BNAppException {
         UsuarioDTO u = null;
-        // Agregamos los JOINs para que la UI reciba los nombres (Rol, Sexo, etc.)
         String query = " SELECT "
                 + " u.IdUsuario, u.IdCatalogoTipoUsuario, u.IdCatalogoSexo, u.IdCatalogoEstadoCivil, u.IdCatalogoRaza, "
                 + " u.PrimerNombre, u.SegundoNombre, u.PrimerApellido, u.SegundoApellido, "
@@ -226,7 +218,6 @@ public class UsuarioDAO extends DataHelperSQLite implements IDAO<UsuarioDTO> {
             pstmt.setString(1, cedula);
             ResultSet rs = pstmt.executeQuery();
             if (rs.next()) {
-                // Usamos el constructor completo para que no falte ningún dato
                 u = new UsuarioDTO(
                         rs.getInt("IdUsuario"),
                         rs.getInt("IdCatalogoTipoUsuario"),
@@ -249,7 +240,7 @@ public class UsuarioDAO extends DataHelperSQLite implements IDAO<UsuarioDTO> {
                 );
             }
         } catch (SQLException e) {
-            throw new PatException(e.getMessage(), getClass().getName(), "readByCedula()");
+            throw new BNAppException(e, getClass().getName(), "readByCedula()");
         }
         return u;
     }
