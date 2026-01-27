@@ -21,8 +21,8 @@ public class UsuarioDAO extends DataHelperSQLite implements IDAO<UsuarioDTO> {
         String query = "INSERT INTO Usuario ("
                 + "IdCatalogoTipoUsuario, IdCatalogoSexo, IdCatalogoEstadoCivil, "
                 + "PrimerNombre, SegundoNombre, PrimerApellido, SegundoApellido, "
-                + "Cedula, IdCatalogoRaza, Foto) "
-                + "VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?)";
+                + "Cedula, Foto) "
+                + "VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?)";
         try {
             Connection conn = openConnection();
             PreparedStatement pstmt = conn.prepareStatement(query);
@@ -35,8 +35,7 @@ public class UsuarioDAO extends DataHelperSQLite implements IDAO<UsuarioDTO> {
             pstmt.setString(6, entity.getPrimerApellido());
             pstmt.setString(7, entity.getSegundoApellido());
             pstmt.setString(8, entity.getCedula());
-            pstmt.setInt(9, entity.getIdCatalogoRaza());
-            pstmt.setString(10, entity.getFoto());
+            pstmt.setString(9, entity.getFoto());
 
             pstmt.executeUpdate();
             return true;
@@ -50,18 +49,16 @@ public class UsuarioDAO extends DataHelperSQLite implements IDAO<UsuarioDTO> {
         List<UsuarioDTO> lst = new ArrayList<>();
 
         String query = " SELECT "
-                + " u.IdUsuario, u.IdCatalogoTipoUsuario, u.IdCatalogoSexo, u.IdCatalogoEstadoCivil, u.IdCatalogoRaza, "
+                + " u.IdUsuario, u.IdCatalogoTipoUsuario, u.IdCatalogoSexo, u.IdCatalogoEstadoCivil, "
                 + " u.PrimerNombre, u.SegundoNombre, u.PrimerApellido, u.SegundoApellido, "
                 + " u.Cedula, u.Foto, u.Estado, u.FechaCreacion, u.FechaModificacion, "
-                + " cRol.Nombre  AS RolNombre, "
-                + " cSexo.Nombre AS SexoNombre, "
-                + " cCivil.Nombre AS CivilNombre, "
-                + " cRaza.Nombre AS RazaNombre "
+                + " cRol.Nombre   AS RolNombre, "
+                + " cSexo.Nombre  AS SexoNombre, "
+                + " cCivil.Nombre AS CivilNombre "
                 + " FROM Usuario u "
-                + " JOIN Catalogo cRol  ON u.IdCatalogoTipoUsuario = cRol.IdCatalogo "
-                + " JOIN Catalogo cSexo ON u.IdCatalogoSexo = cSexo.IdCatalogo "
+                + " JOIN Catalogo cRol   ON u.IdCatalogoTipoUsuario = cRol.IdCatalogo "
+                + " JOIN Catalogo cSexo  ON u.IdCatalogoSexo = cSexo.IdCatalogo "
                 + " JOIN Catalogo cCivil ON u.IdCatalogoEstadoCivil = cCivil.IdCatalogo "
-                + " JOIN Catalogo cRaza ON u.IdCatalogoRaza = cRaza.IdCatalogo "
                 + " WHERE u.Estado = 'A' ";
 
         try {
@@ -80,15 +77,13 @@ public class UsuarioDAO extends DataHelperSQLite implements IDAO<UsuarioDTO> {
                         rs.getString("PrimerApellido"),
                         rs.getString("SegundoApellido"),
                         rs.getString("Cedula"),
-                        rs.getInt("IdCatalogoRaza"),
                         rs.getString("Foto"),
                         rs.getString("Estado"),
                         rs.getString("FechaCreacion"),
                         rs.getString("FechaModificacion"),
                         rs.getString("RolNombre"),
                         rs.getString("SexoNombre"),
-                        rs.getString("CivilNombre"),
-                        rs.getString("RazaNombre")
+                        rs.getString("CivilNombre")
                 );
                 lst.add(u);
             }
@@ -102,18 +97,16 @@ public class UsuarioDAO extends DataHelperSQLite implements IDAO<UsuarioDTO> {
     public UsuarioDTO readById(Integer id) throws BNAppException {
         UsuarioDTO u = null;
         String query = " SELECT "
-                + " u.IdUsuario, u.IdCatalogoTipoUsuario, u.IdCatalogoSexo, u.IdCatalogoEstadoCivil, u.IdCatalogoRaza, "
+                + " u.IdUsuario, u.IdCatalogoTipoUsuario, u.IdCatalogoSexo, u.IdCatalogoEstadoCivil, "
                 + " u.PrimerNombre, u.SegundoNombre, u.PrimerApellido, u.SegundoApellido, "
                 + " u.Cedula, u.Foto, u.Estado, u.FechaCreacion, u.FechaModificacion, "
-                + " cRol.Nombre AS RolNombre, "
-                + " cSexo.Nombre AS SexoNombre, "
-                + " cCivil.Nombre AS CivilNombre, "
-                + " cRaza.Nombre AS RazaNombre "
+                + " cRol.Nombre   AS RolNombre, "
+                + " cSexo.Nombre  AS SexoNombre, "
+                + " cCivil.Nombre AS CivilNombre "
                 + " FROM Usuario u "
-                + " JOIN Catalogo cRol  ON u.IdCatalogoTipoUsuario = cRol.IdCatalogo "
-                + " JOIN Catalogo cSexo ON u.IdCatalogoSexo = cSexo.IdCatalogo "
+                + " JOIN Catalogo cRol   ON u.IdCatalogoTipoUsuario = cRol.IdCatalogo "
+                + " JOIN Catalogo cSexo  ON u.IdCatalogoSexo = cSexo.IdCatalogo "
                 + " JOIN Catalogo cCivil ON u.IdCatalogoEstadoCivil = cCivil.IdCatalogo "
-                + " JOIN Catalogo cRaza ON u.IdCatalogoRaza = cRaza.IdCatalogo "
                 + " WHERE u.Estado = 'A' AND u.IdUsuario = ? ";
 
         try {
@@ -133,15 +126,13 @@ public class UsuarioDAO extends DataHelperSQLite implements IDAO<UsuarioDTO> {
                         rs.getString("PrimerApellido"),
                         rs.getString("SegundoApellido"),
                         rs.getString("Cedula"),
-                        rs.getInt("IdCatalogoRaza"),
                         rs.getString("Foto"),
                         rs.getString("Estado"),
                         rs.getString("FechaCreacion"),
                         rs.getString("FechaModificacion"),
                         rs.getString("RolNombre"),
                         rs.getString("SexoNombre"),
-                        rs.getString("CivilNombre"),
-                        rs.getString("RazaNombre")
+                        rs.getString("CivilNombre")
                 );
             }
         } catch (SQLException e) {
@@ -158,7 +149,7 @@ public class UsuarioDAO extends DataHelperSQLite implements IDAO<UsuarioDTO> {
         String query = "UPDATE Usuario SET "
                 + "IdCatalogoTipoUsuario = ?, IdCatalogoSexo = ?, IdCatalogoEstadoCivil = ?, "
                 + "PrimerNombre = ?, SegundoNombre = ?, PrimerApellido = ?, SegundoApellido = ?, "
-                + "Cedula = ?, IdCatalogoRaza = ?, Foto = ?, FechaModificacion = ? "
+                + "Cedula = ?, Foto = ?, FechaModificacion = ? "
                 + "WHERE IdUsuario = ?";
         try {
             Connection conn = openConnection();
@@ -171,10 +162,9 @@ public class UsuarioDAO extends DataHelperSQLite implements IDAO<UsuarioDTO> {
             pstmt.setString(6, entity.getPrimerApellido());
             pstmt.setString(7, entity.getSegundoApellido());
             pstmt.setString(8, entity.getCedula());
-            pstmt.setInt(9, entity.getIdCatalogoRaza());
-            pstmt.setString(10, entity.getFoto());
-            pstmt.setString(11, dtf.format(now));
-            pstmt.setInt(12, entity.getIdUsuario());
+            pstmt.setString(9, entity.getFoto());
+            pstmt.setString(10, dtf.format(now));
+            pstmt.setInt(11, entity.getIdUsuario());
 
             pstmt.executeUpdate();
             return true;
@@ -201,16 +191,15 @@ public class UsuarioDAO extends DataHelperSQLite implements IDAO<UsuarioDTO> {
     public UsuarioDTO readByCedula(String cedula) throws BNAppException {
         UsuarioDTO u = null;
         String query = " SELECT "
-                + " u.IdUsuario, u.IdCatalogoTipoUsuario, u.IdCatalogoSexo, u.IdCatalogoEstadoCivil, u.IdCatalogoRaza, "
+                + " u.IdUsuario, u.IdCatalogoTipoUsuario, u.IdCatalogoSexo, u.IdCatalogoEstadoCivil, "
                 + " u.PrimerNombre, u.SegundoNombre, u.PrimerApellido, u.SegundoApellido, "
                 + " u.Cedula, u.Foto, u.Estado, u.FechaCreacion, u.FechaModificacion, "
                 + " cRol.Nombre AS RolNombre, cSexo.Nombre AS SexoNombre, "
-                + " cCivil.Nombre AS CivilNombre, cRaza.Nombre AS RazaNombre "
+                + " cCivil.Nombre AS CivilNombre"
                 + " FROM Usuario u "
-                + " JOIN Catalogo cRol  ON u.IdCatalogoTipoUsuario = cRol.IdCatalogo "
-                + " JOIN Catalogo cSexo ON u.IdCatalogoSexo = cSexo.IdCatalogo "
+                + " JOIN Catalogo cRol   ON u.IdCatalogoTipoUsuario = cRol.IdCatalogo "
+                + " JOIN Catalogo cSexo  ON u.IdCatalogoSexo = cSexo.IdCatalogo "
                 + " JOIN Catalogo cCivil ON u.IdCatalogoEstadoCivil = cCivil.IdCatalogo "
-                + " JOIN Catalogo cRaza ON u.IdCatalogoRaza = cRaza.IdCatalogo "
                 + " WHERE u.Estado = 'A' AND u.Cedula = ? ";
         try {
             Connection conn = openConnection();
@@ -228,15 +217,13 @@ public class UsuarioDAO extends DataHelperSQLite implements IDAO<UsuarioDTO> {
                         rs.getString("PrimerApellido"),
                         rs.getString("SegundoApellido"),
                         rs.getString("Cedula"),
-                        rs.getInt("IdCatalogoRaza"),
                         rs.getString("Foto"),
                         rs.getString("Estado"),
                         rs.getString("FechaCreacion"),
                         rs.getString("FechaModificacion"),
                         rs.getString("RolNombre"),
                         rs.getString("SexoNombre"),
-                        rs.getString("CivilNombre"),
-                        rs.getString("RazaNombre")
+                        rs.getString("CivilNombre")
                 );
             }
         } catch (SQLException e) {

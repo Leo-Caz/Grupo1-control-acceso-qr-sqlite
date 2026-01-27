@@ -14,7 +14,7 @@ import Infrastructure.Config.BNAppException;
 public class AsistenciaCsvExporter extends DataHelperSQLite {
 
     public void export(Path outputCsv) throws BNAppException {
-        // Query optimizada para reporte plano
+        // Query optimizada para reporte plano (Raza eliminada)
         String query =
             "SELECT " +
             "  r.FechaEntrada, " +
@@ -23,20 +23,17 @@ public class AsistenciaCsvExporter extends DataHelperSQLite {
             "  cQR.CodigoQR, " +
             "  cRol.Nombre AS Rol, " +
             "  cSexo.Nombre AS Sexo, " +
-            "  cCivil.Nombre AS EstadoCivil, " +
-            "  cRaza.Nombre AS Raza " +
+            "  cCivil.Nombre AS EstadoCivil " +
             "FROM Registro r " +
             "JOIN Usuario u ON u.IdUsuario = r.IdUsuario " +
             "JOIN Carnet cQR ON cQR.IdCarnet = r.IdCarnet " +
-            "JOIN Catalogo cRol  ON u.IdCatalogoTipoUsuario = cRol.IdCatalogo " +
-            "JOIN Catalogo cSexo ON u.IdCatalogoSexo = cSexo.IdCatalogo " +
+            "JOIN Catalogo cRol   ON u.IdCatalogoTipoUsuario = cRol.IdCatalogo " +
+            "JOIN Catalogo cSexo  ON u.IdCatalogoSexo = cSexo.IdCatalogo " +
             "JOIN Catalogo cCivil ON u.IdCatalogoEstadoCivil = cCivil.IdCatalogo " +
-            "JOIN Catalogo cRaza ON u.IdCatalogoRaza = cRaza.IdCatalogo " +
             "WHERE r.Estado = 'A' " +
             "ORDER BY r.FechaEntrada ASC";
 
         try {
-            // Aseguramos que la carpeta exista antes de escribir
             if (outputCsv.getParent() != null) {
                 Files.createDirectories(outputCsv.getParent());
             }
@@ -46,8 +43,8 @@ public class AsistenciaCsvExporter extends DataHelperSQLite {
             ResultSet rs = ps.executeQuery();
 
             try (BufferedWriter bw = Files.newBufferedWriter(outputCsv, StandardCharsets.UTF_8)) {
-                // Escribir Cabecera
-                bw.write("fecha_entrada,cedula,nombre_completo,codigo_qr,rol,sexo,estado_civil,raza");
+                // Escribir Cabecera (7 columnas ahora)
+                bw.write("fecha_entrada,cedula,nombre_completo,codigo_qr,rol,sexo,estado_civil");
                 bw.newLine();
 
                 // Escribir Filas
@@ -58,13 +55,11 @@ public class AsistenciaCsvExporter extends DataHelperSQLite {
                              csv(rs.getString(4)) + "," +
                              csv(rs.getString(5)) + "," +
                              csv(rs.getString(6)) + "," +
-                             csv(rs.getString(7)) + "," +
-                             csv(rs.getString(8)));
+                             csv(rs.getString(7)));
                     bw.newLine();
                 }
             }
         } catch (Exception e) {
-            // ✅ Captura unificada para SQL e I/O
             throw new BNAppException(e, getClass().getName(), "export()");
         }
     }

@@ -10,11 +10,12 @@ import java.util.concurrent.TimeUnit;
 import javax.swing.SwingUtilities;
 
 import BusinessLogic.Entities.AsistenciaBL;
-import DataAccess.DTO.UsuarioDTO;
-import UI.UIContract;
 import Camera.CameraService;
 import Camera.CameraServiceImpl;
+import DataAccess.DTO.UsuarioDTO;
+import Infrastructure.Config.BNAppMSG;
 import QR.ZXingDecoder;
+import UserInterface.UIContract;
 
 public class AccessController {
 
@@ -117,24 +118,18 @@ public class AccessController {
     }
     
     public void exportCsvDefault() {
-        try {
-            view.mostrarEstado("GENERANDO CSV...");
-            
-            // Delegamos la exportación a la BL
-            asistenciaBL.generarReporteCsv(Paths.get("asistencia.csv"));
-            
-            view.mostrarEstado("CSV EXPORTADO: asistencia.csv");
-            
-            new Thread(() -> {
-                try { Thread.sleep(2000); } catch (Exception e){}
-                SwingUtilities.invokeLater(view::limpiarPantalla);
-            }).start();
-            
-        } catch (Exception e) {
-            e.printStackTrace();
-            view.mostrarEstado("ERROR EXPORTAR: " + e.getMessage());
-        }
+    try {
+        view.mostrarEstado("GENERANDO CSV...");
+        asistenciaBL.generarReporteCsv(Paths.get("asistencia.csv"));
+        
+        BNAppMSG.bnShow("El reporte de asistencia ha sido generado exitosamente.");
+        
+        view.mostrarEstado("CSV EXPORTADO: asistencia.csv");
+    } catch (Exception e) {
+        BNAppMSG.bnShowError("Fallo en la exportación: " + e.getMessage());
+        view.mostrarEstado("ERROR EXPORTAR");
     }
+}
 
     public void stop() {
         isRunning = false;

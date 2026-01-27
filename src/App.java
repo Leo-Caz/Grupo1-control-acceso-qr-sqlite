@@ -4,10 +4,11 @@ import javax.swing.UIManager;
 import Controller.AccessController;
 import Infrastructure.Config.BNAppException;
 import Infrastructure.Config.BNAppMSG;
-import UI.SwingMainWindow;       
+import UserInterface.SwingMainWindow; 
 
 public class App {
     public static void main(String[] args) {
+        
         try {
             UIManager.setLookAndFeel(UIManager.getSystemLookAndFeelClassName());
         } catch (Exception e) {
@@ -28,9 +29,10 @@ public class App {
                 controller.start();
                 
             } catch (Exception e) {
-                BNAppException ex = new BNAppException(e, "App", "main.invokeLater");
+                new BNAppException(e, "App", "main.invokeLater");
                 
                 BNAppMSG.bnShowError("Error fatal al iniciar la aplicación. Revise los logs.");
+                e.printStackTrace(); 
             }
         });
     }

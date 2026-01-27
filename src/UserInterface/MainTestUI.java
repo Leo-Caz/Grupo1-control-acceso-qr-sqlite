@@ -1,4 +1,4 @@
-package UI;
+package UserInterface;
 
 import javax.swing.SwingUtilities;
 import javax.swing.UIManager;

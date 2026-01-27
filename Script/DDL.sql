@@ -30,23 +30,25 @@ CREATE TABLE Catalogo(
     FechaModificacion DATETIME
 );
 
+
 CREATE TABLE Usuario (
     IdUsuario               INTEGER PRIMARY KEY AUTOINCREMENT,
-    IdCatalogoTipoUsuario   INTEGER NOT NULL REFERENCES Catalogo(IdCatalogo),
-    IdCatalogoSexo          INTEGER NOT NULL REFERENCES Catalogo(IdCatalogo),
-    IdCatalogoEstadoCivil   INTEGER NOT NULL REFERENCES Catalogo(IdCatalogo),
-    IdCatalogoRaza          INTEGER NOT NULL REFERENCES Catalogo(IdCatalogo),
+    IdCatalogoTipoUsuario   INTEGER NOT NULL,
+    IdCatalogoSexo          INTEGER NOT NULL,
+    IdCatalogoEstadoCivil   INTEGER NOT NULL,
+    Cedula                  TEXT NOT NULL UNIQUE,
+    PrimerNombre            TEXT NOT NULL,
+    SegundoNombre           TEXT,
+    PrimerApellido          TEXT NOT NULL,
+    SegundoApellido         TEXT,
+    Foto                    TEXT,
+    Estado                  TEXT NOT NULL DEFAULT 'A',
+    FechaCreacion           DATETIME DEFAULT CURRENT_TIMESTAMP,
+    FechaModificacion       DATETIME,
     
-    PrimerNombre            VARCHAR(15) NOT NULL,
-    SegundoNombre           VARCHAR(15),
-    PrimerApellido          VARCHAR(12) NOT NULL,
-    SegundoApellido         VARCHAR(12) NOT NULL,
-    Cedula                  VARCHAR(10) NOT NULL UNIQUE,
-    Foto                    TEXT NOT NULL DEFAULT 'sin_foto.jpg',
-
-    Estado VARCHAR(1) NOT NULL DEFAULT ('A'),
-    FechaCreacion DATETIME DEFAULT(datetime('now','localtime')),
-    FechaModificacion DATETIME
+    FOREIGN KEY (IdCatalogoTipoUsuario) REFERENCES Catalogo(IdCatalogo),
+    FOREIGN KEY (IdCatalogoSexo)        REFERENCES Catalogo(IdCatalogo),
+    FOREIGN KEY (IdCatalogoEstadoCivil) REFERENCES Catalogo(IdCatalogo)
 );
 
 

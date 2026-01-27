@@ -1,6 +1,7 @@
 package DataAccess.DTO;
 
 public class UsuarioDTO {
+
     private Integer idUsuario;
     private Integer idCatalogoTipoUsuario;
     private Integer idCatalogoSexo;
@@ -10,56 +11,50 @@ public class UsuarioDTO {
     private String primerApellido;
     private String segundoApellido;
     private String cedula;
-    private Integer idCatalogoRaza;
     private String foto;
     private String estado;
     private String fechaCreacion;
     private String fechaModificacion;
 
-    private String nombreRol;         
-    private String nombreSexo;        
-    private String nombreEstadoCivil; 
-    private String nombreRaza;
+    private String nombreRol;
+    private String nombreSexo;
+    private String nombreEstadoCivil;
 
-   public UsuarioDTO(
-        Integer idUsuario,
-        Integer idCatalogoTipoUsuario,
-        Integer idCatalogoSexo,
-        Integer idCatalogoEstadoCivil,
-        String primerNombre,
-        String segundoNombre,
-        String primerApellido,
-        String segundoApellido,
-        String cedula,
-        Integer idCatalogoRaza,
-        String foto,
-        String estado,
-        String fechaCreacion,
-        String fechaModificacion,
-        String nombreRol,
-        String nombreSexo,
-        String nombreEstadoCivil,
-        String nombreRaza
-) {
-    this.idUsuario = idUsuario;
-    this.idCatalogoTipoUsuario = idCatalogoTipoUsuario;
-    this.idCatalogoSexo = idCatalogoSexo;
-    this.idCatalogoEstadoCivil = idCatalogoEstadoCivil;
-    this.primerNombre = primerNombre;
-    this.segundoNombre = segundoNombre;
-    this.primerApellido = primerApellido;
-    this.segundoApellido = segundoApellido;
-    this.cedula = cedula;
-    this.idCatalogoRaza = idCatalogoRaza;
-    this.foto = foto;
-    this.estado = estado;
-    this.fechaCreacion = fechaCreacion;
-    this.fechaModificacion = fechaModificacion;
-    this.nombreRol = nombreRol;
-    this.nombreSexo = nombreSexo;
-    this.nombreEstadoCivil = nombreEstadoCivil;
-    this.nombreRaza = nombreRaza;
-}
+    public UsuarioDTO(
+            Integer idUsuario,
+            Integer idCatalogoTipoUsuario,
+            Integer idCatalogoSexo,
+            Integer idCatalogoEstadoCivil,
+            String primerNombre,
+            String segundoNombre,
+            String primerApellido,
+            String segundoApellido,
+            String cedula,
+            String foto,
+            String estado,
+            String fechaCreacion,
+            String fechaModificacion,
+            String nombreRol,
+            String nombreSexo,
+            String nombreEstadoCivil
+    ) {
+        this.idUsuario = idUsuario;
+        this.idCatalogoTipoUsuario = idCatalogoTipoUsuario;
+        this.idCatalogoSexo = idCatalogoSexo;
+        this.idCatalogoEstadoCivil = idCatalogoEstadoCivil;
+        this.primerNombre = primerNombre;
+        this.segundoNombre = segundoNombre;
+        this.primerApellido = primerApellido;
+        this.segundoApellido = segundoApellido;
+        this.cedula = cedula;
+        this.foto = foto;
+        this.estado = estado;
+        this.fechaCreacion = fechaCreacion;
+        this.fechaModificacion = fechaModificacion;
+        this.nombreRol = nombreRol;
+        this.nombreSexo = nombreSexo;
+        this.nombreEstadoCivil = nombreEstadoCivil;
+    }
 
     public UsuarioDTO() {
     }
@@ -136,14 +131,6 @@ public class UsuarioDTO {
         this.cedula = cedula;
     }
 
-    public Integer getIdCatalogoRaza() {
-        return idCatalogoRaza;
-    }
-
-    public void setIdCatalogoRaza(Integer idCatalogoRaza) {
-        this.idCatalogoRaza = idCatalogoRaza;
-    }
-
     public String getFoto() {
         return foto;
     }
@@ -200,11 +187,4 @@ public class UsuarioDTO {
         this.nombreEstadoCivil = nombreEstadoCivil;
     }
 
-    public String getNombreRaza() {
-        return nombreRaza;
-    }
-
-    public void setNombreRaza(String nombreRaza) {
-        this.nombreRaza = nombreRaza;
-    }
 }

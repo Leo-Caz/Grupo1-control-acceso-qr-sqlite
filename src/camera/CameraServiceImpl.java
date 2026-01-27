@@ -14,9 +14,9 @@ public class CameraServiceImpl implements CameraService {
         webcam = Webcam.getDefault();
         
         if (webcam != null) {
-            // Buscamos si la cámara soporta 640x480
+            // Buscamos si la cámara soporta 1280x720
             Dimension[] sizes = webcam.getViewSizes();
-            Dimension targetSize = new Dimension(640, 480);
+            Dimension targetSize = new Dimension(1920, 1080);
             boolean supportsTarget = false;
 
             for (Dimension d : sizes) {
@@ -31,7 +31,7 @@ public class CameraServiceImpl implements CameraService {
                 webcam.setViewSize(targetSize);
             } else {
                 // Opcional: Imprimir advertencia para saber qué tamaño está usando
-                System.out.println("Advertencia: La cámara no soporta 640x480. Se usará el tamaño por defecto.");
+                System.out.println("Advertencia: La cámara no soporta 1280x720. Se usará el tamaño por defecto.");
             }
 
             webcam.open();
