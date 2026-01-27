@@ -11,42 +11,47 @@ import java.sql.Statement;
 import java.time.LocalDateTime;
 import java.time.format.DateTimeFormatter;
 
+import Infrastructure.Config.BNAppConfig; 
+import Infrastructure.Config.BNAppException; 
 
 public abstract class DataHelperSQLite {
-    private static final String DBPathConnection = "jdbc:sqlite:Database/Usuario.sqlite"; 
+    // ✅ Ahora la ruta se obtiene de BNAppConfig
+    private static final String DBPathConnection = BNAppConfig.bnGetDatabase(); 
     private static Connection conn = null;
     
     private DateTimeFormatter   dtf = DateTimeFormatter.ofPattern("yyyy-MM-dd HH:mm:ss");  
     private LocalDateTime       now = LocalDateTime.now();
 
     protected DataHelperSQLite(){}
-    protected static synchronized Connection openConnection() throws Exception{
+
+    /**
+     * Abre la conexión usando la ruta centralizada y activa FKs.
+     */
+    protected static synchronized Connection openConnection() throws BNAppException {
         try {
-            // Aseguramos que la conexión no esté cerrada antes de entregarla
             if(conn == null || conn.isClosed()) {
                 conn = DriverManager.getConnection(DBPathConnection);
-                // IMPORTANTE: Habilitar llaves foráneas en cada sesión
                 try (Statement stmt = conn.createStatement()) {
                     stmt.execute("PRAGMA foreign_keys = ON;");
                 }
             }
         } catch (SQLException e) {
-            throw new Exception("Error al conectar a la base de datos: " + e.getMessage());
+            // ✅ Uso del nuevo sistema de errores con trazabilidad técnica
+            throw new BNAppException(e, "DataHelperSQLite", "openConnection()");
         } 
         return conn;
     }
 
-    protected static void closeConnection() throws Exception{
+    protected static void closeConnection() throws BNAppException {
         try {
             if (conn != null && !conn.isClosed())
                 conn.close();
         } catch (SQLException e) {
-            throw new Exception("Error al cerrar la conexión: " + e.getMessage());
+            throw new BNAppException(e, "DataHelperSQLite", "closeConnection()");
         }
     }
 
     protected String getDataTimeNow() {
-        return dtf.format(now).toString();
+        return dtf.format(now);
     }
-    
 }

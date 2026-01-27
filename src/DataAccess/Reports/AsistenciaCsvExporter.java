@@ -9,7 +9,7 @@ import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 
 import DataAccess.Helpers.DataHelperSQLite;
-import Infrastructure.Config.BNAppException; // ✅ Nuevo Import
+import Infrastructure.Config.BNAppException; 
 
 public class AsistenciaCsvExporter extends DataHelperSQLite {
 

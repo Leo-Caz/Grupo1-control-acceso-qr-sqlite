@@ -1,5 +1,0 @@
-path.database=jdbc:sqlite:Database\Usuario.sqlite
-path.log=src\Logs
-msg.error=Ocurrió un error inesperado, contacte al admin.
-msg.class=Clase
-msg.method=Método
