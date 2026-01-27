@@ -1,0 +1,86 @@
+Grupo1-control-acceso-qr-sqlite (Raíz del Proyecto)
+│
+├── 📂 Database (Base de datos SQLite)
+│ └── Usuario.sqlite (BD local para validar Carnet/Usuario y registrar Registro)
+│
+├── 📂 Script (SQL de creación y carga)
+│ ├── DDL.sql (Creación de tablas)
+│ └── DML.sql (Datos de prueba: catálogos/usuarios/carnets)
+│
+├── 📂 fotos_usuarios (Recursos)
+│ └── maria.jpg (Foto de prueba mostrada en la ficha)
+│
+├── 📂 lib (Dependencias locales en .jar)
+│ ├── sqlite-jdbc-3.50.3.0.jar (Driver SQLite)
+│ ├── flatlaf-3.jar (Look & Feel Swing)
+│ └── flatlaf-intellij-themes-3.0.jar (Temas FlatLaf)
+│
+├── 📂 src (Código fuente)
+│ ├── AppBootstrap.java (Punto de entrada / arranque del sistema)
+│ │
+│ ├── 📂 ui (Vista Swing)
+│ │ ├── SwingMainWindow.java (Ventana principal: panel cámara + ficha + botones)
+│ │ ├── UIContract.java (Contrato/métodos para actualizar UI desde el controlador)
+│ │ ├── MainTestUI.java (Arranque de UI para pruebas)
+│ │ └── ConsoleUI.java (Stub/No usado actualmente)
+│ │
+│ ├── 📂 controller (Controlador: orquesta el flujo)
+│ │ └── AccessController.java (Loop cámara → QR → validación/registro → actualización UI)
+│ │
+│ ├── 📂 camera (Acceso a hardware)
+│ │ ├── CameraService.java (Interfaz de captura)
+│ │ └── CameraServiceImpl.java (Implementación webcam)
+│ │
+│ ├── 📂 qr (Servicio de lectura/decodificación)
+│ │ ├── ZXingDecoder.java (Decodifica QR desde BufferedImage usando ZXing)
+│ │ ├── QRService.java (Contrato de servicio QR)
+│ │ ├── CameraQRServiceImpl.java (QR leyendo desde cámara)
+│ │ └── MockQRService.java (Mock para pruebas sin cámara)
+│ │
+│ ├── 📂 BussinessLogic (Reglas de negocio)
+│ │ └── 📂 Entities
+│ │ ├── UsuarioBL.java (Casos de uso relacionados a Usuario)
+│ │ └── CatalogoBL.java (Casos de uso para Catálogo)
+│ │
+│ ├── 📂 DataAccess (Persistencia SQLite + transporte de datos)
+│ │ ├── IDAO.java (Contrato CRUD base)
+│ │ ├── UsuarioDAO.java (CRUD Usuario + lecturas con joins a Catálogo)
+│ │ ├── CarnetDAO.java (CRUD Carnet + búsqueda por CodigoQR)
+│ │ ├── RegistroDAO.java (Inserción/consulta de asistencias)
+│ │ ├── CatalogoDAO.java (Lectura de catálogos por tipo)
+│ │ │
+│ │ ├── 📂 DTO (Objetos de transporte)
+│ │ │ ├── UsuarioDTO.java
+│ │ │ ├── CarnetDTO.java
+│ │ │ ├── RegistroDTO.java
+│ │ │ └── CatalogoDTO.java
+│ │ │
+│ │ ├── 📂 Helpers
+│ │ │ └── DataHelperSQLite.java (Conexión SQLite / utilidades)
+│ │ │
+│ │ └── 📂 Reports
+│ │ └── AsistenciaCsvExporter.java (Exportación de registros a CSV)
+│ │
+│ ├── 📂 Framework (Transversal / Excepciones)
+│ │ └── PatException.java (Excepción personalizada para capa DataAccess/BL)
+│ │
+│ ├── 📂 model (Modelos “Entity” simples)
+│ │ ├── Usuario.java
+│ │ ├── Carnet.java
+│ │ └── Registro.java
+│ │
+│ ├── 📂 db (Repositorios en memoria — auxiliar/no principal si usan SQLite)
+│ │ ├── UserRepository.java
+│ │ ├── InMemoryUserRepository.java
+│ │ ├── AttendanceRepository.java
+│ │ └── InMemoryAttendanceRepository.java
+│ │
+│ ├── 📂 util (Utilitarios)
+│ │ └── SleepUtil.java (Pausas/cooldown — auxiliar)
+│ │
+│ └── 📂 test/java (Pruebas)
+│ └── (carpeta creada; pruebas aún no centralizadas aquí)
+│
+├── pom.xml (Configuración Maven del proyecto)
+├── README.md (Descripción y pasos generales)
+└── target (Salida de compilación; no es parte de la arquitectura lógica)
