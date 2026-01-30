@@ -23,7 +23,7 @@ INSERT INTO Catalogo
 (   3                   ,'Soltero'      ,'tipos de estado civil'),  -- ID 11
 (   3                   ,'Casado'       ,'tipos de estado civil'),  -- ID 12
 (   3                   ,'Divorciado'   ,'tipos de estado civil'),  -- ID 13
-(   3                   ,'Viudo'        ,'tipos de estado civil');  -- ID 14
+(   3                   ,'Viudo'        ,'tipos de estado civil');          -- ID 18
 
 -- INSERT definitivo sin la columna IdCatalogoRaza
 INSERT INTO Usuario

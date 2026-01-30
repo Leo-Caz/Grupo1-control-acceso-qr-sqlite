@@ -19,7 +19,7 @@ public class BNAppException extends Exception {
 
     public BNAppException(Exception e, String bnClaseNombre, String bnMetodo) {
         super(BNAppConfig.BN_MSG_ERROR); 
-        bnSaveLogFile((e != null ? e.getMessage() : "Excepción Nula Detectada"), bnClaseNombre, bnMetodo);
+        bnSaveLogFile((e != null ? e.getMessage() : "Excepcion Nula Detectada"), bnClaseNombre, bnMetodo);
     }
 
     private void bnSaveLogFile(String bnLogMsg, String bnClase, String bnMetodo) {
@@ -46,7 +46,7 @@ public class BNAppException extends Exception {
             writer.println(logFormatted);
             writer.println("--------------------------------------------------"); 
         } catch (Exception e) {
-            System.err.println(CMDColor.RED + "[BNAppException.saveLogFile] ERROR CRÍTICO ❱ " + e.getMessage() + CMDColor.RESET);
+            System.err.println(CMDColor.RED + "[BNAppException.saveLogFile] ERROR CRITICO ❱ " + e.getMessage() + CMDColor.RESET);
         }
     }
 }

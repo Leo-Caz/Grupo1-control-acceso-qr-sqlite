@@ -23,11 +23,13 @@ import javax.swing.ImageIcon;
 import javax.swing.JButton;
 import javax.swing.JFrame;
 import javax.swing.JLabel;
+import javax.swing.JOptionPane; // Necesario para el input manual
 import javax.swing.JPanel;
 import javax.swing.SwingConstants;
 
 import Controller.AccessController;
 import DataAccess.DTO.UsuarioDTO;
+import DataAccess.Helpers.DatabaseBackupService; // Importamos el servicio de respaldo
 import Infrastructure.Config.BNAppMSG;
 
 public class SwingMainWindow extends JFrame implements UIContract {
@@ -52,7 +54,7 @@ public class SwingMainWindow extends JFrame implements UIContract {
 
     private void inicializarVentana() {
         setTitle("Sistema de Control de Acceso");
-        setSize(1000, 650);
+        setSize(1100, 650); // Aumenté un poco el ancho para que quepan los botones
         setDefaultCloseOperation(JFrame.DISPOSE_ON_CLOSE);
         setLocationRelativeTo(null);
         setLayout(new BorderLayout());
@@ -73,11 +75,11 @@ public class SwingMainWindow extends JFrame implements UIContract {
         Color colorTitulo = new Color(33, 37, 41);
         Color colorAcento = new Color(0, 102, 204);
 
-        // --- Contenedor Central (GridBagLayout para centrado absoluto) ---
+        // --- Contenedor Central ---
         JPanel panelCentral = new JPanel(new GridBagLayout());
         panelCentral.setBackground(colorFondo);
 
-        // Contenedor Horizontal para agrupar Cámara y Datos
+        // Contenedor Horizontal
         JPanel containerDashboard = new JPanel();
         containerDashboard.setLayout(new BoxLayout(containerDashboard, BoxLayout.X_AXIS));
         containerDashboard.setOpaque(false);
@@ -120,7 +122,7 @@ public class SwingMainWindow extends JFrame implements UIContract {
         lblFoto.setBorder(BorderFactory.createLineBorder(Color.LIGHT_GRAY));
         lblFoto.setAlignmentX(Component.CENTER_ALIGNMENT);
 
-        // Grid para información (Etiqueta: Valor)
+        // Grid para información
         JPanel panelInfo = new JPanel(new GridLayout(4, 2, 10, 15));
         panelInfo.setOpaque(false);
         panelInfo.setMaximumSize(new Dimension(330, 150));
@@ -159,7 +161,7 @@ public class SwingMainWindow extends JFrame implements UIContract {
         panelDatos.add(Box.createVerticalStrut(25));
         panelDatos.add(lblEstado);
 
-        // Ensamblado del dashboard centrado
+        // Ensamblado
         containerDashboard.add(panelCamara);
         containerDashboard.add(Box.createHorizontalStrut(30));
         containerDashboard.add(panelDatos);
@@ -167,28 +169,59 @@ public class SwingMainWindow extends JFrame implements UIContract {
         panelCentral.add(containerDashboard);
         add(panelCentral, BorderLayout.CENTER);
 
-        // --- Panel de Botones (Inferior centrado) ---
-        JPanel panelBotones = new JPanel(new FlowLayout(FlowLayout.CENTER, 25, 15));
+        // --- Panel de Botones (Inferior) ---
+        JPanel panelBotones = new JPanel(new FlowLayout(FlowLayout.CENTER, 20, 15));
         panelBotones.setBackground(colorPanel);
         panelBotones.setBorder(BorderFactory.createMatteBorder(1, 0, 0, 0, Color.LIGHT_GRAY));
 
-        JButton btnManual = new JButton("Registro Manual");
+        // 1. Botón Entrada Manual (Renombrado)
+        JButton btnManual = new JButton("Entrada Manual");
+        
+        // 2. Botón Limpiar
         JButton btnLimpiar = new JButton("Limpiar Pantalla");
+        
+        // 3. Botón Exportar
         JButton btnExport = new JButton("Exportar CSV");
+        
+        // 4. NUEVO BOTÓN: Respaldo BD (El que pediste antes)
+        JButton btnBackup = new JButton("Respaldo BD");
+        
+        // 5. Botón Cerrar
         JButton btnCerrar = new JButton("Cerrar Sesión");
-
         btnCerrar.setBackground(colorAcento);
         btnCerrar.setForeground(Color.WHITE);
         btnCerrar.setFocusPainted(false);
 
-        // Lógica de botones
+        // --- Lógica de Botones ---
+
+        // Lógica: Entrada Manual
+        btnManual.addActionListener(e -> {
+            String codigo = JOptionPane.showInputDialog(this, "Ingrese Cédula o Código:", "Entrada Manual", JOptionPane.QUESTION_MESSAGE);
+            if (codigo != null && !codigo.trim().isEmpty()) {
+                if (controller != null) {
+                    // AQUÍ LLAMAS A TU MÉTODO PARA PROCESAR EL CÓDIGO MANUALMENTE
+                    // controller.onManualEntry(codigo.trim()); // Descomenta esto si tienes el método
+                }
+            }
+        });
+
+        // Lógica: Exportar CSV
         btnExport.addActionListener(e -> {
             if (controller != null) {
                 controller.exportCsvDefault();
-        
-            }});
+            }
+        });
+
+        // Lógica: Limpiar
         btnLimpiar.addActionListener(e -> limpiarPantalla());
 
+        // Lógica: RESPALDO BD (Nueva funcionalidad)
+        btnBackup.addActionListener(e -> {
+            DatabaseBackupService backupService = new DatabaseBackupService();
+            backupService.crearRespaldo();
+        });
+
+        // Lógica: Cerrar
         btnCerrar.addActionListener(e -> {
             if (BNAppMSG.bnShowConfirmYesNo("¿Está seguro que desea cerrar la sesión y apagar la cámara?")) {
                 if (controller != null) {
@@ -199,9 +232,11 @@ public class SwingMainWindow extends JFrame implements UIContract {
             }
         });
 
+        // Añadir botones al panel
         panelBotones.add(btnManual);
         panelBotones.add(btnLimpiar);
         panelBotones.add(btnExport);
+        panelBotones.add(btnBackup); // Agregado aquí
         panelBotones.add(btnCerrar);
 
         add(panelBotones, BorderLayout.SOUTH);

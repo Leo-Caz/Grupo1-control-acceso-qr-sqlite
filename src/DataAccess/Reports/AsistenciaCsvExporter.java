@@ -14,7 +14,7 @@ import Infrastructure.Config.BNAppException;
 public class AsistenciaCsvExporter extends DataHelperSQLite {
 
     public void export(Path outputCsv) throws BNAppException {
-        // Query optimizada para reporte plano (Raza eliminada)
+        // Query optimizada
         String query =
             "SELECT " +
             "  r.FechaEntrada, " +
@@ -34,16 +34,21 @@ public class AsistenciaCsvExporter extends DataHelperSQLite {
             "ORDER BY r.FechaEntrada ASC";
 
         try {
+            // Asegurar que la carpeta exista
             if (outputCsv.getParent() != null) {
                 Files.createDirectories(outputCsv.getParent());
             }
 
+            // 1. Obtener la conexión (Aquí usará la lógica nueva del DataHelper)
             Connection conn = openConnection();
-            PreparedStatement ps = conn.prepareStatement(query);
-            ResultSet rs = ps.executeQuery();
 
-            try (BufferedWriter bw = Files.newBufferedWriter(outputCsv, StandardCharsets.UTF_8)) {
-                // Escribir Cabecera (7 columnas ahora)
+            // 2. Usar try-with-resources para SQL (PreparedStatement y ResultSet)
+            // Esto evita que se quede memoria colgada si algo falla
+            try (PreparedStatement ps = conn.prepareStatement(query);
+                 ResultSet rs = ps.executeQuery();
+                 BufferedWriter bw = Files.newBufferedWriter(outputCsv, StandardCharsets.UTF_8)) {
+
+                // Escribir Cabecera
                 bw.write("fecha_entrada,cedula,nombre_completo,codigo_qr,rol,sexo,estado_civil");
                 bw.newLine();
 

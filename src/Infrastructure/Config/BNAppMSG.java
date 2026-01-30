@@ -25,7 +25,7 @@ public abstract class BNAppMSG {
      * Retorna: true si dice SI, false si dice NO
      */
     public static final boolean bnShowConfirmYesNo(String msg){
-        int respuesta = JOptionPane.showConfirmDialog(null, msg, "⚔️ Confirmar Acción", JOptionPane.YES_NO_OPTION);
+        int respuesta = JOptionPane.showConfirmDialog(null, msg, "⚔️ Confirmar Accion", JOptionPane.YES_NO_OPTION);
         return (respuesta == JOptionPane.YES_OPTION);
     }
 }

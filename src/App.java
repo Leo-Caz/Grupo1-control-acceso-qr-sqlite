@@ -12,12 +12,12 @@ public class App {
         try {
             UIManager.setLookAndFeel(UIManager.getSystemLookAndFeelClassName());
         } catch (Exception e) {
-            System.out.println("⚠️ No se pudo cargar el estilo nativo.");
+            System.out.println("No se pudo cargar el estilo nativo.");
         }
 
         SwingUtilities.invokeLater(() -> {
             try {
-                System.out.println("🚀 Iniciando Sistema de Control de Acceso...");
+                System.out.println("Iniciando Sistema de Control de Acceso...");
                 
                 SwingMainWindow window = new SwingMainWindow();
                 

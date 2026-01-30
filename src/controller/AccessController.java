@@ -51,7 +51,6 @@ public class AccessController {
             isRunning = true;
             view.mostrarEstado("CÁMARA INICIADA - ESPERANDO QR");
 
-            // Ejecutar el ciclo de lectura cada 33ms (~30 FPS)
             executor.scheduleAtFixedRate(this::processFrame, 0, 150, TimeUnit.MILLISECONDS);
 
         } catch (Exception e) {
